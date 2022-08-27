@@ -1,0 +1,33 @@
+Art.png
+size: 128, 128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+satisfaction0000
+  rotate: false
+  xy: 56, 1
+  size: 53, 52
+  orig: 53, 52
+  offset: 0, 0
+  index: -1
+satisfaction0001
+  rotate: false
+  xy: 1, 1
+  size: 53, 54
+  orig: 53, 54
+  offset: 0, 0
+  index: -1
+satisfaction0002
+  rotate: false
+  xy: 1, 57
+  size: 53, 54
+  orig: 53, 54
+  offset: 0, 0
+  index: -1
+satisfaction0003
+  rotate: false
+  xy: 56, 55
+  size: 52, 52
+  orig: 52, 52
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,10 @@
+.tmp
+redist
+dist
+bin
+working
+.vscode/settings.json
+hlprofile.dump
+*.sav
+concept/promo/exp
+*.uuid

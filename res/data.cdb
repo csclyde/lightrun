@@ -1,0 +1,71 @@
+{
+	"sheets": [
+		{
+			"name": "sounds",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "id",
+					"display": null
+				},
+				{
+					"typeStr": "4",
+					"name": "volume"
+				},
+				{
+					"typeStr": "2",
+					"name": "loop",
+					"display": null
+				},
+				{
+					"typeStr": "1",
+					"name": "group",
+					"display": null
+				},
+				{
+					"typeStr": "13",
+					"name": "file",
+					"display": null
+				}
+			],
+			"lines": [],
+			"separators": [
+				{
+					"title": "UI",
+					"id": "menu_drag"
+				},
+				{
+					"title": "Player",
+					"id": "player_hit"
+				},
+				{
+					"title": "Enemy",
+					"id": "enemy_hit"
+				},
+				{
+					"title": "Projectiles",
+					"id": "explosion_small"
+				},
+				{
+					"title": "Weapons",
+					"id": "attack_bow"
+				},
+				{
+					"title": "World",
+					"id": "portal_open"
+				},
+				{
+					"title": "Ambient + Music",
+					"id": "dungeon_impact"
+				},
+				{
+					"index": 52,
+					"title": "World"
+				}
+			],
+			"props": {}
+		}
+	],
+	"customTypes": [],
+	"compress": false
+}
