@@ -1,4 +1,4 @@
-# Necrovale
+# Lightrun
 
 ## Setup
 
