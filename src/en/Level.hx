@@ -107,6 +107,7 @@ class Level extends Entity {
                 if(Math.random() <= THRESHOLD) {
                     var envShape = Math.random() < 0.5 ? EnvShape.Square(SIZE, SIZE) : EnvShape.Circle(SIZE);
                     var env = new EnvObj(x * SIZE, y * SIZE, envShape);
+                    roomCollision.push(env.body);
                 }
             }
         }
