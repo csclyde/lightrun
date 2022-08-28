@@ -86,10 +86,10 @@ class World extends Scene {
 
         root.filter = null;
 
-        if(currentLevel != null) {
-            currentLevel.destroy();
-            currentLevel = null;
-        }
+        //if(currentLevel != null) {
+        //    currentLevel.destroy();
+        //    currentLevel = null;
+        //}
 
         speed = 1.0;
     }
@@ -134,23 +134,35 @@ class World extends Scene {
         markProfilingEnd('Physics');
     }
 
+    override function update() {
+        super.update();
+        drawLightbeam();
+    }
+    
     override function fixedUpdate() {
         super.fixedUpdate();
     }
-
+    
     function drawLightbeam(){
         lightGraphics.clear();
         if(input.isControlActive('primary')){
             var to = (new Vector2(input.mouseWorldX, input.mouseWorldY)) - (new Vector2(player.cx, player.cy)).normal;
             var lCast = currentLevel.linecast(new Vector2(input.mouseWorldX, input.mouseWorldY), new Vector2(player.cx, player.cy));
-            if(lCast == null)
+            if(lCast == null){
+                lightGraphics.lineStyle(3, 0xF01010);
+                lightGraphics.moveTo(player.cx, player.cy);
+                lightGraphics.lineTo(input.mouseWorldX, input.mouseWorldY);
                 return;
+            }
             var start = lCast.closest.hit;
             var norm = lCast.closest.normal;
             var reflected = 2 * (norm * to) - to;
-            lightGraphics.moveTo(start.x, start.y);
             var dest = start + reflected;
+            lightGraphics.lineStyle(3, 0xF0F010);
+            lightGraphics.moveTo(start.x, start.y);
             lightGraphics.lineTo(dest.x, dest.y);
+            //trace(start);
+            //trace(dest);
         }
     }
 }
