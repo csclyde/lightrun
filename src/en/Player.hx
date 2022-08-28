@@ -7,12 +7,13 @@ class Player extends Entity {
 
     var lightCharge:Float;
     var lightGraphics:h2d.Graphics;
-    var lazerSpeed = 400;
-    var chargeSpeed = 0.75;
+    var lazerSpeed = 700;
+    var chargeSpeed = .4;
     var isLight = false;
     var lastCollided: Body = null;
     var lazerPoints: Array<PointInTime> = [];
-    var lazerTTL = 1;
+    var lazerTTL = 0.3;
+    var lazerDir: Vector2;
 
     public function new(sx, sy) {
         super(world, sx, sy);
@@ -151,13 +152,14 @@ class Player extends Entity {
         graphics.clear();
         lastCollided = null;
         lazerPoints = [{point: new Vector2(cx, cy), time: et}]; 
+        var playerPos = new Vector2(cx, cy);
+        lazerDir = (new Vector2(input.mouseWorldX, input.mouseWorldY) - playerPos).normal;
     }
     function lightControl(){
         if(timeout.getS("lightmode") == 0)
             enterLameMode();
         var playerPos = new Vector2(cx, cy);
-        var dir = (new Vector2(input.mouseWorldX, input.mouseWorldY) - playerPos).normal;
-        var points = calculateLightbeam(playerPos, dir, dt * lazerSpeed, 0, [playerPos], true);
+        var points = calculateLightbeam(playerPos, lazerDir, dt * lazerSpeed, 0, [playerPos], true);
         var lastPoint = points[points.length-1];
         lazerPoints.push({point: lastPoint, time: et});
         body.x = lastPoint.x;
@@ -202,7 +204,8 @@ class Player extends Entity {
             var y = direction.y - dot*norm.y;
             
             points.push(hit);
-            calculateLightbeam(hit, new Vector2(x,y).normal, remaining, depth + 1, points);
+            lazerDir = new Vector2(x,y).normal;
+            calculateLightbeam(hit, lazerDir, remaining, depth + 1, points);
             return points;
         }
     }
