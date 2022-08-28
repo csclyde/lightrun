@@ -105,8 +105,8 @@ class Level extends Entity {
         for(y in 0...GRID_Y) {
             for(x in 0...GRID_X) {
                 if(Math.random() <= THRESHOLD) {
-                    var envShape = Math.random() < 0.5 ? EnvShape.Square(1, 1) : EnvShape.Circle(1);
-                    var env = new EnvObj(x, y, envShape);
+                    var envShape = Math.random() < 0.5 ? EnvShape.Square(SIZE, SIZE) : EnvShape.Circle(SIZE);
+                    var env = new EnvObj(x * SIZE, y * SIZE, envShape);
                 }
             }
         }
