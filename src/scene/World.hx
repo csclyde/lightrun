@@ -62,6 +62,10 @@ class World extends Scene {
 
     }
 
+    public function GetBrighter(amount: Float){
+
+    }
+
     override function init() {
         player = new en.Player(0, 0);
         currentLevel = new Level(0, 0);

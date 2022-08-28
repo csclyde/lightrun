@@ -1,5 +1,6 @@
 package en;
 
+import hxd.fmt.grd.Data.ColorStop;
 import echo.data.Options.LinecastOptions;
 
 class Player extends Entity {
