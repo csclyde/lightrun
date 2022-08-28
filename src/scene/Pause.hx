@@ -21,12 +21,12 @@ class Pause extends Scene {
             game.switchScene(game.worldScene);
         }
 
-        var optionsItem = new ui.comp.LabelButton(uiRoot, 'Options');
-        menuItems.push(optionsItem);
-        optionsItem.onClick = function() {
-            game.optionsScene.returnScene = this;
-            game.switchScene(game.optionsScene);
-        }
+        // var optionsItem = new ui.comp.LabelButton(uiRoot, 'Options');
+        // menuItems.push(optionsItem);
+        // optionsItem.onClick = function() {
+        //     game.optionsScene.returnScene = this;
+        //     game.switchScene(game.optionsScene);
+        // }
 
         var returnItem = new ui.comp.LabelButton(uiRoot, 'Return to Menu');
         menuItems.push(returnItem);

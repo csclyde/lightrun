@@ -76,14 +76,11 @@ class World extends Scene {
         worldGraphics = new h2d.Graphics(scene);
         vt = new VectorText(hud, 8);
 
-        darkness = 0.0;
         spawnRate = 0.5;
         spawnTimer = 0.0;
     }
 
-    public function getBrighter(amount:Float) {
-        darkness -= amount;
-    }
+    public function getBrighter(amount:Float) {}
 
     public function killBunnies(x:Float, y:Float, r:Float) {
         for(b in bunnies) {
@@ -98,8 +95,6 @@ class World extends Scene {
     override function init() {
         player = new en.Player(0, 0);
         currentLevel = new Level(0, 0);
-
-        darkness = 0.0;
 
         Events.subscribe('player_died', (params) -> currentLevel.handlePlayerDeath());
 
@@ -173,12 +168,6 @@ class World extends Scene {
 
     override function update() {
         super.update();
-
-        darkness += dt;
-
-        // darkness = Math.min(darkness, 9.5);
-
-        // game.fade.alpha = darkness / 10;
 
         vt.clear();
 

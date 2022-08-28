@@ -15,7 +15,7 @@ class DustBunny extends Entity {
             material: {
                 elasticity: 0.5
             },
-            mass: .5,
+            mass: .0001,
             // drag_length: 1,
             max_velocity_length: 200,
             shapes: [

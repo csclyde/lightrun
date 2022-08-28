@@ -174,6 +174,7 @@ class Level extends Entity {
         world.getBrighter(env.gotHit());
         world.psystem.makeLightColl(hit, new Vector2(playerDir.x, playerDir.y));
         world.killBunnies(hit.x, hit.y, 100);
+        world.player.gainCharge();
     }
 
     function registerEnvObj(obj:EnvObj) {
