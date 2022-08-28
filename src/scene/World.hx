@@ -17,6 +17,7 @@ class World extends Scene {
     public var camera:Camera;
     public var ui:UI;
     public var lighting:Lighting;
+    public var psystem: PSystem;
 
     public var currentLevel:Level;
     public var player:en.Player;
@@ -45,6 +46,7 @@ class World extends Scene {
         scene.name = 'scene';
         hud = new h2d.Layers();
         hud.name = 'hud';
+        psystem = new PSystem(this);
 
         root.add(scene, Const.MIDGROUND_OBJECTS);
         root.add(hud, Const.FOREGROUND_OBJECTS);

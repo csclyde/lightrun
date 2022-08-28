@@ -168,11 +168,12 @@ class Level extends Entity {
         }
     }
 
-    public function hitEnvBody(body:Body) {
+    public function hitEnvBody(body:Body, hit: Vector2, normal: Vector2, playerDir: Vector2) {
         var env = envById[body.id];
         if(env == null)
             return;
         world.getBrighter(env.gotHit());
+        world.psystem.makeLightColl(hit, new Vector2(playerDir.x, playerDir.y));
     }
 
     function registerEnvObj(obj:EnvObj) {

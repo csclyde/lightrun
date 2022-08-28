@@ -2,8 +2,6 @@ package en;
 
 import format.abc.Data.MethodTypeExtra;
 import h3d.Vector;
-import echo.math.Vector3;
-import echo.shape.Rect;
 import echo.shape.Polygon;
 import echo.data.Types.ShapeType;
 
