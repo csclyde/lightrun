@@ -88,6 +88,8 @@ class Lighting extends Process {
     }
 
     public override function update() {
+        return;
+
         lightmap.tile.getTexture().clear(0x000001);
 
         lights = lights.filter(l -> !l.dead || l.killed + 1 > et);
