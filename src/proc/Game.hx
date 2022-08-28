@@ -80,12 +80,11 @@ class Game extends Process {
         // be neccessary after adding a loading scene
         timeout.add(() -> {
             // normal start into main menu
-            switchScene(menuScene, null, 0.5);
+            // switchScene(menuScene, null, 0.5);
 
             // kick the player right into the first level for testing and such
             saver.loadGame('zzz');
-            // switchScene(worldScene, () -> worldScene.loadLevel(new Courtroom()), -1);
-            // switchScene(worldScene, () -> {}, -1);
+            switchScene(worldScene, () -> {}, -1);
 
             // testing start
             // switchScene(worldScene, () -> ScriptRunner.run(LoadTest), -1);
