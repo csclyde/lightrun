@@ -33,7 +33,7 @@ class Camera extends Process {
     public function new(p:Process) {
         super(p);
         dx = dy = 0;
-        lerpForce = 1;
+        lerpForce = 7;
         maxStep = 5;
 
         Events.subscribe('camera_shake', (params) -> {
@@ -55,7 +55,7 @@ class Camera extends Process {
 
     override function reset() {
         recenter();
-        lerpForce = 1;
+        lerpForce = 7;
     }
 
     public function trackEntity(e:Entity, immediate:Bool = true) {
