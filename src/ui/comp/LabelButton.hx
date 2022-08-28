@@ -16,36 +16,38 @@ class LabelButton extends Label {
         super.over(_);
 
         if(active == false) {
-            labelTxt.dropShadow.dx = 0.5;
-            labelTxt.dropShadow.dy = 0.5;
+            vectorTxt.clear();
+            vectorTxt.setStyle(16, 1, 0xFF0000);
+            vectorTxt.drawText(0, 0, text);
         }
     }
 
     override function out(_) {
         super.out(_);
-        labelTxt.dropShadow.dx = 0;
-        labelTxt.dropShadow.dy = 0;
+        vectorTxt.clear();
+        vectorTxt.setStyle(16, 1, 0x0000FF);
+        vectorTxt.drawText(0, 0, text);
     }
 
     override function push(_) {
         super.push(_);
 
-        labelTxt.color.r = 1.0;
-        labelTxt.color.g = 0.0;
-        labelTxt.color.b = 0.0;
-        labelTxt.dropShadow.dx = 0;
-        labelTxt.dropShadow.dy = 0;
+        vectorTxt.clear();
+        vectorTxt.setStyle(16, 1, 0xFF00FF);
+        vectorTxt.drawText(0, 0, text);
     }
 
     override function release(_) {
         super.release(_);
 
-        labelTxt.color.g = 1.0;
-        labelTxt.color.b = 1.0;
-
         if(hover) {
-            labelTxt.dropShadow.dx = 0.5;
-            labelTxt.dropShadow.dy = 0.5;
+            vectorTxt.clear();
+            vectorTxt.setStyle(16, 1, 0xFF0000);
+            vectorTxt.drawText(0, 0, text);
+        }else {
+            vectorTxt.clear();
+            vectorTxt.setStyle(16, 1, 0x0000FF);
+            vectorTxt.drawText(0, 0, text);
         }
     }
 }

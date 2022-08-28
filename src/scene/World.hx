@@ -1,5 +1,6 @@
 package scene;
 
+import eng.tool.VectorText;
 import h3d.shader.pbr.Light.LightEvaluation;
 import h2d.SpriteBatch;
 import echo.World;
@@ -22,7 +23,10 @@ class World extends Scene {
     public var collision:Collision;
     public var fxProc:Fx;
 
+    public var vt:VectorText;
+
     public var worldGraphics:h2d.Graphics;
+    public var hudGraphics:h2d.Graphics;
 
     var shouldDraw = false;
 
@@ -39,7 +43,6 @@ class World extends Scene {
 
         scene = new h2d.Layers();
         scene.name = 'scene';
-        scene.setScale(0.5);
         hud = new h2d.Layers();
         hud.name = 'hud';
 
@@ -62,6 +65,7 @@ class World extends Scene {
         fxProc = new Fx(this);
 
         worldGraphics = new h2d.Graphics(scene);
+        vt = new VectorText(hud, 8);
 
         darkness = 0.0;
     }
@@ -146,9 +150,14 @@ class World extends Scene {
 
         darkness += dt;
 
-        darkness = Math.min(darkness, 9.5);
+        // darkness = Math.min(darkness, 9.5);
 
-        game.fade.alpha = darkness / 10;
+        // game.fade.alpha = darkness / 10;
+
+        vt.clear();
+
+        vt.setStyle(8, 1, 0xFF0000);
+        vt.drawText(Math.floor(gw() / 2) - 70, 10, "DARKNESS: " + Math.floor(darkness * 10));
     }
 
     override function fixedUpdate() {

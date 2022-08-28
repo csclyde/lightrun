@@ -1,7 +1,13 @@
 package ui.comp;
 
+import eng.tool.VectorText;
+
 class Label extends Component {
     var labelTxt:h2d.Text;
+
+    public var vectorTxt:eng.tool.VectorText;
+
+    var text:String;
 
     public var label(get, set):String;
 
@@ -17,14 +23,20 @@ class Label extends Component {
 
         parentFlow = parent;
 
+        text = l;
+
         borderWidth = 3;
         borderHeight = 3;
         padding = 4;
         horizontalAlign = Middle;
 
         labelTxt = new h2d.Text(f, this);
-        labelTxt.text = l;
+        // labelTxt.text = l;
         labelTxt.setScale(2);
+
+        vectorTxt = new VectorText(this);
+        vectorTxt.setStyle(16, 1, 0x0000FF);
+        vectorTxt.drawText(0, 0, l);
 
         // labelTxt.dropShadow = {
         // 	dx: 0,

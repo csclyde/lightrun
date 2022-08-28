@@ -1,15 +1,17 @@
 package scene;
 
+import eng.tool.VectorText;
 import ui.comp.LabelButton;
 import sys.FileSystem;
 
 class MainMenu extends Scene {
     public var uiRoot:h2d.Flow;
     public var menuItems:Array<ui.comp.Component>;
-    public var logo:h2d.Bitmap;
 
     var continueGameItem:LabelButton;
     var newGameItem:LabelButton;
+
+    var logo:VectorText;
 
     public function new(p:Process) {
         super(p);
@@ -22,28 +24,25 @@ class MainMenu extends Scene {
         uiRoot.horizontalAlign = uiRoot.verticalAlign = Middle;
         uiRoot.layout = Vertical;
 
-        continueGameItem = new ui.comp.LabelButton(uiRoot, 'Continue Journey');
-        menuItems.push(continueGameItem);
-        continueGameItem.onClick = function() {
-            game.saver.loadGame('slot1');
-            game.switchScene(game.worldScene, () -> ScriptRunner.run('Dungeon/LoadNextLevel'), 1);
-        }
+        logo = new VectorText(uiRoot, 16);
+        logo.setStyle(24, 1, 0xFF00FF);
+        logo.drawText(0, 0, "LIGHTRUN");
 
-        newGameItem = new ui.comp.LabelButton(uiRoot, 'Begin Journey');
+        newGameItem = new ui.comp.LabelButton(uiRoot, 'PLAY GAME');
         menuItems.push(newGameItem);
         newGameItem.onClick = function() {
             game.saver.loadGame('slot1');
-            game.switchScene(game.worldScene, () -> ScriptRunner.run('Courtroom/Judgement'), 1);
+            game.switchScene(game.worldScene, () -> {}, 1);
         }
 
-        var optionsItem = new ui.comp.LabelButton(uiRoot, 'Options');
-        menuItems.push(optionsItem);
-        optionsItem.onClick = function() {
-            game.optionsScene.returnScene = this;
-            game.switchScene(game.optionsScene);
-        }
+        // var optionsItem = new ui.comp.LabelButton(uiRoot, 'Options');
+        // menuItems.push(optionsItem);
+        // optionsItem.onClick = function() {
+        //     game.optionsScene.returnScene = this;
+        //     game.switchScene(game.optionsScene);
+        // }
 
-        var quitItem = new ui.comp.LabelButton(uiRoot, 'Quit Game');
+        var quitItem = new ui.comp.LabelButton(uiRoot, 'QUIT GAME');
         menuItems.push(quitItem);
         quitItem.onClick = function() {
             onEscape();
@@ -60,15 +59,7 @@ class MainMenu extends Scene {
         Events.send('exit_game');
     }
 
-    override public function switchTo() {
-        if(FileSystem.exists('slot1.sav')) {
-            newGameItem.visible = false;
-            continueGameItem.visible = true;
-        }else {
-            newGameItem.visible = true;
-            continueGameItem.visible = false;
-        }
-    }
+    override public function switchTo() {}
 
     override public function switchFrom() {
         for(item in menuItems) {

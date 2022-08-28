@@ -1,4 +1,4 @@
-package ui;
+package eng.tool;
 
 class VectorText {
     var tx:Int;
@@ -11,15 +11,25 @@ class VectorText {
 
     var g:h2d.Graphics;
 
-    public function new(graphics:h2d.Graphics) {
-        this.g = graphics;
+    public function new(parent:h2d.Object, ?size:Int = 16) {
         tx = 0;
         ty = 0;
-        ch = 32;
-        chh = 16;
-        cw = 16;
-        cwh = 8;
-        sw = cw + 10;
+
+        g = new h2d.Graphics(parent);
+        setStyle(size, 1, 0xFF0000);
+    }
+
+    public function clear() {
+        g.clear();
+    }
+
+    public function setStyle(size = 16, thickness:Int = 1, color:Int = 0xFF0000) {
+        ch = size * 2;
+        chh = size;
+        cw = size;
+        cwh = Math.floor(size / 2);
+        sw = size + 3;
+        g.lineStyle(thickness, color);
     }
 
     public function drawText(x:Int, y:Int, text:String) {

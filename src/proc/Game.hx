@@ -30,8 +30,10 @@ class Game extends Process {
         createRoot(s);
 
         feedback = new ui.FeedbackPanel();
-        feedbackDisplay = new ui.comp.Label(null, 'Alpha Build. Press F9 to give in-game feedback.', Assets.fontTiny);
-
+        feedbackDisplay = new ui.comp.Label(null, '', Assets.fontTiny);
+        feedbackDisplay.vectorTxt.clear();
+        feedbackDisplay.vectorTxt.setStyle(8, 1, 0x0000FF);
+        feedbackDisplay.vectorTxt.drawText(0, 0, 'Alpha Build. Press F9 to give in-game feedback.');
         inputProc = new Input(this);
         audioProc = new Audio(this);
         debugInfo = new DebugInfo(this);
@@ -58,7 +60,7 @@ class Game extends Process {
         fade = new h2d.Bitmap(h2d.Tile.fromColor(0x070707));
         fade.width = w();
         fade.height = h();
-        root.add(fade, Const.SCREEN_LAYER);
+        // root.add(fade, Const.SCREEN_LAYER);
 
         feedbackDisplay.setTextScale(1);
         root.add(feedback, Const.UI_LAYER);
@@ -78,12 +80,12 @@ class Game extends Process {
         // be neccessary after adding a loading scene
         timeout.add(() -> {
             // normal start into main menu
-            // switchScene(menuScene, null, 0.5);
+            switchScene(menuScene, null, 0.5);
 
             // kick the player right into the first level for testing and such
             saver.loadGame('zzz');
             // switchScene(worldScene, () -> worldScene.loadLevel(new Courtroom()), -1);
-            switchScene(worldScene, () -> {}, -1);
+            // switchScene(worldScene, () -> {}, -1);
 
             // testing start
             // switchScene(worldScene, () -> ScriptRunner.run(LoadTest), -1);
