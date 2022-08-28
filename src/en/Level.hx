@@ -1,5 +1,6 @@
 package en;
 
+import en.EnvShape.EnvObj;
 import h2d.TileGroup;
 
 class Level extends Entity {
@@ -85,24 +86,34 @@ class Level extends Entity {
 
     public function build() {
         createTiles();
-        createDoodads();
         createCollision();
         createTriggers();
         spawnEnemies();
     }
 
     // meant to be overridden by subclasses
-    function createCollision() {}
+    function createCollision() {
+        var GRID_X = 20;
+        var GRID_Y = 20;
+        var THRESHOLD = 0.1;
+        for(y in 0...GRID_Y){
+            for(x in 0...GRID_X){
+                if(Math.random() <= THRESHOLD){
+                    var envShape = Math.random() < 0.5 ? EnvShape.Square(1,1) : EnvShape.Circle(1);
+                    var env = new EnvObj(x,y, envShape);
+                }
+            }
+        }
+    }
 
     function createTriggers() {}
 
     function createTiles() {}
-
-    function createDoodads() {}
 
     function spawnEnemies() {}
 
     public function startLevel() {}
 
     public function handlePlayerDeath() {}
+
 }
