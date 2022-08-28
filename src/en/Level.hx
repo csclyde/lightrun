@@ -73,9 +73,9 @@ class Level extends Entity {
         }
     }
 
-    public function linecast(start:Vector2, end:Vector2) {
+    public function linecast(start:Vector2, end:Vector2, ?exclude: Body) {
         var line = echo.Line.get_from_vectors(start, end);
-        return line.linecast(roomCollision);
+        return line.linecast(roomCollision.filter(r -> r != exclude));
     }
 
     public function linecastLength(start:Vector2, end:Vector2) {
