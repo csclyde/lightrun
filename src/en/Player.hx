@@ -110,7 +110,6 @@ class Player extends Entity {
         if(timeout.has('lightmode')) {
             body.shape.solid = false;
             body.mass = 0;
-            trace('WHEE');
 
             // COREY
         }else {
