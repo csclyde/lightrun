@@ -15,12 +15,16 @@ class Level extends Entity {
     public var roomCollision:Array<Body>;
     public var graphics:h2d.Graphics;
 
+    var shapeColor:Int;
+
     var triggers:Array<Trigger>;
 
     public function new(w:Int, h:Int, ?tw:Int = 16, ?th:Int = 16) {
         super(world, 0, 0);
 
         roomCollision = [];
+
+        shapeColor = 0x0000FF;
 
         mapWidth = w;
         mapHeight = h;
@@ -105,10 +109,16 @@ class Level extends Entity {
         var SIZE = 10;
         var THRESHOLD = 0.1;
 
-        var shapeCount = 50;
+        // draw room boundaries, then fill with shapes
+        world.physWorld.make({
+            shape: {
+                type: POLYGON
+            }
+        });
+        var shapeCount = 200;
         for(i in 0...shapeCount) {
             var envShape = Math.random() < 0.5 ? EnvShape.Square(Util.randRange(10, 100), Util.randRange(10, 100)) : EnvShape.Circle(Util.randRange(10, 50));
-            var env = new EnvObj(Util.randRange(-300, 300), Util.randRange(-300, 300), envShape);
+            var env = new EnvObj(Util.randRange(-500, 500), Util.randRange(-500, 500), envShape);
             roomCollision.push(env.body);
             // env.body.dirty = true;
         }
@@ -154,17 +164,17 @@ class Level extends Entity {
             case RECT:
                 var r:echo.shape.Rect = cast shape;
                 if(r.transformed_rect != null && r.rotation != 0) {
-                    draw_polygon(r.transformed_rect.count, r.transformed_rect.vertices, 0xFFFFFF, 0x0000FF);
+                    draw_polygon(r.transformed_rect.count, r.transformed_rect.vertices, 0xFFFFFF, shapeColor);
                 }else draw_rect(shape_pos.x - r.width * 0.5, shape_pos.y - r.height * 0.5, r.width, r.height, 0xFFFFFF, 0x0000FF, 0);
             case CIRCLE:
                 var c:echo.shape.Circle = cast shape;
 
-                draw_circle(shape_pos.x, shape_pos.y, c.radius, 0xFFFFFF, 0x0000FF);
+                draw_circle(shape_pos.x, shape_pos.y, c.radius, 0xFFFFFF, shapeColor);
 
             case POLYGON:
                 var p:echo.shape.Polygon = cast shape;
 
-                draw_polygon(p.count, p.vertices, 0xFFFFFF, 0x0000FF);
+                draw_polygon(p.count, p.vertices, 0xFFFFFF, shapeColor);
         }
     }
 

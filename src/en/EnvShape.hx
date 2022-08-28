@@ -8,8 +8,12 @@ enum EnvShape {
 }
 
 class EnvObj extends Entity {
+    public var shapeColor:Int;
+
     public function new(sx:Float, sy:Float, shape:EnvShape, color:Int = 0xFFFFFFFF) {
         super(world, sx, sy);
+        shapeColor = Util.randRange(0x00FF00, 0x0000FF);
+
         var physShape:echo.data.Options.ShapeOptions = switch(shape) {
             case Square(w, h): {
                     type: ShapeType.RECT,
