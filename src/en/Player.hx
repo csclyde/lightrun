@@ -207,10 +207,10 @@ class Player extends Entity {
             points.push(to);
             return points;
         }else {
-            if(isReal)
-                world.currentLevel.hitEnvBody(lCast.body);
             var hit = lCast.closest.hit;
             var norm = lCast.closest.normal;
+            if(isReal)
+                world.currentLevel.hitEnvBody(lCast.body, hit, norm, direction);
             var lazerDist = (hit - origin).length;
             var remaining = len - lazerDist;
             lastCollided = lCast.body;
