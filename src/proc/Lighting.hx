@@ -124,8 +124,8 @@ class Lighting extends Process {
             light.drawTo(lightmap.tile.getTexture());
         }
 
-        lightmap.adjustColor({
-            lightness: globalIllum / 5
-        });
+        // lightmap.adjustColor({
+        //     lightness: world.lightness / 10
+        // });
     }
 }
