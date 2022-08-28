@@ -141,11 +141,16 @@ class World extends Scene {
     function drawLightbeam(){
         lightGraphics.clear();
         if(input.isControlActive('primary')){
+            var to = (new Vector2(input.mouseWorldX, input.mouseWorldY)) - (new Vector2(player.cx, player.cy)).normal;
             var lCast = currentLevel.linecast(new Vector2(input.mouseWorldX, input.mouseWorldY), new Vector2(player.cx, player.cy));
             if(lCast == null)
                 return;
             var start = lCast.closest.hit;
-            var dir = lCast.closest.inverse_normal;
+            var norm = lCast.closest.normal;
+            var reflected = 2 * (norm * to) - to;
+            lightGraphics.moveTo(start.x, start.y);
+            var dest = start + reflected;
+            lightGraphics.lineTo(dest.x, dest.y);
         }
     }
 }
