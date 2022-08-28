@@ -93,7 +93,7 @@ class Player extends Entity {
         }
 
         graphics.clear();
-        graphics.lineStyle(5, 0xFF0000);
+        graphics.lineStyle(2, 0xFF0000);
         graphics.drawCircle(0, 0, 10);
         graphics.moveTo(0, 0);
         graphics.lineTo(body.velocity.x, body.velocity.y);
