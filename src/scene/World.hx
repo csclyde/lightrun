@@ -136,10 +136,10 @@ class World extends Scene {
 
     override function update() {
         super.update();
-        var LAZER_LEN = 20;
+        var LAZER_LEN = 200;
         var playerPos = new Vector2(player.cx, player.cy);
         var dir = (new Vector2(input.mouseWorldX, input.mouseWorldY) - playerPos).normal;
-        drawLightbeam(playerPos, dir, LAZER_LEN);
+        drawLightbeam(playerPos, dir, LAZER_LEN, true);
     }
     
     override function fixedUpdate() {
