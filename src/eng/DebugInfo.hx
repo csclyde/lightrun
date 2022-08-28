@@ -48,7 +48,7 @@ class DebugInfo extends Process {
         world.scene.add(physDebugLayer, Const.DEBUG_DATA);
         physDebug = new HeapsDebug(physDebugLayer);
         physDebug.draw_quadtree = true;
-        physDebug.draw_world_bounds = true;
+        //physDebug.draw_world_bounds = true;
     }
 
     override function reset() {}
