@@ -66,7 +66,8 @@ class Level extends Entity {
             return null;
         }
     }
-    public function linecast(start: Vector2, end: Vector2){
+
+    public function linecast(start:Vector2, end:Vector2) {
         var line = echo.Line.get_from_vectors(start, end);
         return line.linecast(roomCollision);
     }
@@ -96,18 +97,16 @@ class Level extends Entity {
         spawnEnemies();
     }
 
-    // meant to be overridden by subclasses
     function createCollision() {
         var GRID_X = 20;
         var GRID_Y = 20;
         var SIZE = 10;
         var THRESHOLD = 0.1;
-        for(y in 0...GRID_Y){
-            for(x in 0...GRID_X){
-                if(Math.random() <= THRESHOLD){
-                    var envShape = Math.random() < 0.5 ? EnvShape.Square(SIZE,SIZE) : EnvShape.Circle(SIZE);
-                    var env = new EnvObj(x * SIZE ,y * SIZE, envShape);
-                    roomCollision.push(env.body);
+        for(y in 0...GRID_Y) {
+            for(x in 0...GRID_X) {
+                if(Math.random() <= THRESHOLD) {
+                    var envShape = Math.random() < 0.5 ? EnvShape.Square(1, 1) : EnvShape.Circle(1);
+                    var env = new EnvObj(x, y, envShape);
                 }
             }
         }
@@ -122,5 +121,4 @@ class Level extends Entity {
     public function startLevel() {}
 
     public function handlePlayerDeath() {}
-
 }
