@@ -146,7 +146,9 @@ class World extends Scene {
 
         darkness += dt;
 
-        game.fade.alpha = Math.min(0.95, (darkness / 10));
+        darkness = Math.min(darkness, 9.5);
+
+        game.fade.alpha = darkness / 10;
     }
 
     override function fixedUpdate() {
