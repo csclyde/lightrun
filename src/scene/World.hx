@@ -59,7 +59,6 @@ class World extends Scene {
         fxProc = new Fx(this);
 
         worldGraphics = new h2d.Graphics(scene);
-
     }
 
     public function GetBrighter(amount: Float){
@@ -142,5 +141,4 @@ class World extends Scene {
     override function fixedUpdate() {
         super.fixedUpdate();
     }
-
 }
