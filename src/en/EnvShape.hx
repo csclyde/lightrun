@@ -1,5 +1,6 @@
 package en;
 
+import h2d.filter.Bloom;
 import format.abc.Data.MethodTypeExtra;
 import h3d.Vector;
 import echo.shape.Polygon;
@@ -67,6 +68,8 @@ class EnvObj extends Entity {
             mass: STATIC,
         });
         world.physWorld.add(body);
+        //var shader = new Bloom(5,5,5,5);
+        //graphics.addShader(shader);
     }
     public override function update(){
         if(extraBrightness > 0){

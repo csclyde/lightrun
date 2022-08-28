@@ -1,5 +1,6 @@
 package en;
 
+import hxd.Math;
 import h3d.Vector;
 
 class PSystem extends Process{
@@ -16,6 +17,23 @@ class PSystem extends Process{
         var fx = new LightCollisionFX(pos, norm);
         fxs.push(fx);
     }
+	public static function easeInLerp(v1: Vector, v2: Vector, k: Float){
+        var result = new Vector();
+		result.x = Math.lerp(v1.x, v2.x, k*k);
+		result.y = Math.lerp(v1.y, v2.y, k*k);
+		result.z = Math.lerp(v1.z, v2.z, k*k);
+		result.w = Math.lerp(v1.w, v2.w, k*k);
+        return result;
+	}
+	public static function easeOutLerp(v1: Vector, v2: Vector, k: Float){
+        var result = new Vector();
+		var flip = 1-k;
+		result.x = Math.lerp(v1.x, v2.x, 1-flip*flip);
+		result.y = Math.lerp(v1.y, v2.y, 1-flip*flip);
+		result.z = Math.lerp(v1.z, v2.z, 1-flip*flip);
+		result.w = Math.lerp(v1.w, v2.w, 1-flip*flip);
+        return result;
+	}
 
 }
 class LightCollisionFX{
@@ -63,8 +81,8 @@ class LightCollisionFX{
                 continue;
             }
             var lifeRatio = 1 - (p.life / p.maxLife);
-            p.head.easeInLerp(p.startPos, p.endPos, lifeRatio);
-            p.tail.easeOutLerp(p.startPos, p.endPos, lifeRatio);
+            p.head = PSystem.easeInLerp(p.startPos, p.endPos, lifeRatio);
+            p.tail = PSystem.easeOutLerp(p.startPos, p.endPos, lifeRatio);
             //trace('${p.head} | ${p.tail}');
             p.curColor.lerp(white, p.baseColor, lifeRatio);
             graphics.lineStyle(1, p.curColor.toColor(), 1);
