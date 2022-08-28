@@ -23,7 +23,6 @@ class World extends Scene {
     public var fxProc:Fx;
 
     public var worldGraphics:h2d.Graphics;
-    public var lightGraphics:h2d.Graphics;
 
     var shouldDraw = false;
 
@@ -61,8 +60,6 @@ class World extends Scene {
 
         worldGraphics = new h2d.Graphics(scene);
 
-        lightGraphics = new h2d.Graphics(scene);
-        lightGraphics.lineStyle(3, 0xEED707);
     }
 
     override function init() {
@@ -136,48 +133,10 @@ class World extends Scene {
 
     override function update() {
         super.update();
-        shouldDraw = !shouldDraw;
-        if(!shouldDraw)
-            return;
-        var LAZER_LEN = 200;
-        var playerPos = new Vector2(player.cx, player.cy);
-        var dir = (new Vector2(input.mouseWorldX, input.mouseWorldY) - playerPos).normal;
-        lightGraphics.clear();
-        drawLightbeam(playerPos, dir, LAZER_LEN, 0, true);
     }
 
     override function fixedUpdate() {
         super.fixedUpdate();
     }
 
-    function drawLightbeam(origin:Vector2, direction:Vector2, len:Float, depth: Int, ?ignoreBody: Body, debug = false) {
-        if(depth == 10)
-            return;
-        if(input.isControlActive('primary')) {
-            var to = origin + (direction * len);
-            var lCast = currentLevel.linecast(origin, to, ignoreBody);
-            if(lCast == null) {
-                lightGraphics.lineStyle(1, 0xf0f010);
-                lightGraphics.moveTo(origin.x, origin.y);
-                lightGraphics.lineTo(to.x, to.y);
-            }else {
-                var hit = lCast.closest.hit;
-                var norm = lCast.closest.normal;
-                var lazerDist =(hit-origin).length;
-                var remaining = len - lazerDist;
-
-
-                var dot = 2.0*(direction.x*norm.x + direction.y*norm.y);
-                var x = direction.x - dot*norm.x;
-                var y = direction.y - dot*norm.y;
-                
-                lightGraphics.lineStyle(1, 0xF0F010);
-                lightGraphics.moveTo(origin.x, origin.y);
-                lightGraphics.lineTo(hit.x, hit.y);
-                drawLightbeam(hit, new Vector2(x,y).normal, remaining, depth + 1, lCast.body);
-            }
-            // trace(start);
-            // trace(dest);
-        }
-    }
 }
