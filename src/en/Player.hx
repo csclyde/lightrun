@@ -144,7 +144,7 @@ class Player extends Entity {
             var playerPos = new Vector2(cx, cy);
             var dir = (new Vector2(input.mouseWorldX, input.mouseWorldY) - playerPos).normal;
             lastCollided = null;
-            var points = calculateLightbeam(playerPos, dir, lightCharge * lazerSpeed, 0, [playerPos], true);
+            var points = calculateLightbeam(playerPos, dir, lightCharge * lazerSpeed, 0, [playerPos], false);
             drawLightPreview(points);
         }else if(lightCharge > 0) {
             timeout.set('lightmode', Math.min(lightCharge, 3.0));
