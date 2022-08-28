@@ -73,7 +73,7 @@ class Level extends Entity {
         }
     }
 
-    public function linecast(start:Vector2, end:Vector2, ?exclude: Body) {
+    public function linecast(start:Vector2, end:Vector2, ?exclude:Body) {
         var line = echo.Line.get_from_vectors(start, end);
         return line.linecast(roomCollision.filter(r -> r != exclude));
     }
@@ -110,28 +110,53 @@ class Level extends Entity {
         var THRESHOLD = 0.1;
 
         // draw room boundaries, then fill with shapes
-        world.physWorld.make({
+        // addHexagon(-210, 140);
+        // addHexagon(-210, -140);
+        // addHexagon(0, -280);
+        // addHexagon(210, -140);
+        // addHexagon(210, 140);
+        // addHexagon(0, 280);
+
+        var shapeCount = 50;
+        for(i in 0...shapeCount) {
+            // var envShape = Math.random() < 0.5 ? EnvShape.Square(Util.randRange(10, 100), Util.randRange(10, 100)) : EnvShape.Circle(Util.randRange(10, 50));
+            // var env = new EnvObj(Util.randRange(-500, 500), Util.randRange(-500, 500), envShape);
+            // roomCollision.push(env.body);
+
+            var shapeBody = world.physWorld.make({
+                x: Util.randRange(-500, 500),
+                y: Util.randRange(-500, 500),
+                mass: STATIC,
+                shape: {
+                    type: POLYGON,
+                    sides: Util.randRange(3, 8),
+                    radius: Util.randRange(10, 100),
+                    rotation: Util.randRange(0, 360),
+                }
+            });
+
+            roomCollision.push(shapeBody);
+        }
+    }
+
+    function addHexagon(x, y, rr = 140) {
+        var roomBody = world.physWorld.make({
+            x: x,
+            y: y,
+            mass: STATIC,
             shape: {
-                type: POLYGON
+                type: POLYGON,
+                vertices: [
+                    new Vector2(-rr, 0),
+                    new Vector2(-rr / 2, -rr),
+                    new Vector2(rr / 2, -rr),
+                    new Vector2(rr, 0),
+                    new Vector2(rr / 2, rr),
+                    new Vector2(-rr / 2, rr),
+                ]
             }
         });
-        var shapeCount = 200;
-        for(i in 0...shapeCount) {
-            var envShape = Math.random() < 0.5 ? EnvShape.Square(Util.randRange(10, 100), Util.randRange(10, 100)) : EnvShape.Circle(Util.randRange(10, 50));
-            var env = new EnvObj(Util.randRange(-500, 500), Util.randRange(-500, 500), envShape);
-            roomCollision.push(env.body);
-            // env.body.dirty = true;
-        }
-
-        // for(y in 0...GRID_Y) {
-        //     for(x in 0...GRID_X) {
-        //         if(Math.random() <= THRESHOLD) {
-        //             var envShape = Math.random() < 0.5 ? EnvShape.Square(SIZE, SIZE) : EnvShape.Circle(SIZE);
-        //             var env = new EnvObj(x * SIZE, y * SIZE, envShape);
-        //             roomCollision.push(env.body);
-        //         }
-        //     }
-        // }
+        roomCollision.push(roomBody);
     }
 
     override function update() {

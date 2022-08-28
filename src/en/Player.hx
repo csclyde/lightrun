@@ -15,7 +15,7 @@ class Player extends Entity {
                 elasticity: 0.5
             },
             mass: 1.0,
-            // drag_length: 20,
+            // drag_length: 1,
             shapes: [
                 {
                     type: CIRCLE,

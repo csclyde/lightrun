@@ -144,13 +144,15 @@ class World extends Scene {
         var dir = (new Vector2(input.mouseWorldX, input.mouseWorldY) - playerPos).normal;
         lightGraphics.clear();
         drawLightbeam(playerPos, dir, LAZER_LEN, 0, true);
+
+        physWorld.set(player.cx - 500, player.cy - 500, 1000, 1000);
     }
 
     override function fixedUpdate() {
         super.fixedUpdate();
     }
 
-    function drawLightbeam(origin:Vector2, direction:Vector2, len:Float, depth: Int, ?ignoreBody: Body, debug = false) {
+    function drawLightbeam(origin:Vector2, direction:Vector2, len:Float, depth:Int, ?ignoreBody:Body, debug = false) {
         if(depth == 10)
             return;
         if(input.isControlActive('primary')) {
@@ -163,18 +165,17 @@ class World extends Scene {
             }else {
                 var hit = lCast.closest.hit;
                 var norm = lCast.closest.normal;
-                var lazerDist =(hit-origin).length;
+                var lazerDist = (hit - origin).length;
                 var remaining = len - lazerDist;
 
+                var dot = 2.0 * (direction.x * norm.x + direction.y * norm.y);
+                var x = direction.x - dot * norm.x;
+                var y = direction.y - dot * norm.y;
 
-                var dot = 2.0*(direction.x*norm.x + direction.y*norm.y);
-                var x = direction.x - dot*norm.x;
-                var y = direction.y - dot*norm.y;
-                
                 lightGraphics.lineStyle(1, 0xF0F010);
                 lightGraphics.moveTo(origin.x, origin.y);
                 lightGraphics.lineTo(hit.x, hit.y);
-                drawLightbeam(hit, new Vector2(x,y).normal, remaining, depth + 1, lCast.body);
+                drawLightbeam(hit, new Vector2(x, y).normal, remaining, depth + 1, lCast.body);
             }
             // trace(start);
             // trace(dest);
