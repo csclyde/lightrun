@@ -17,7 +17,7 @@ class EnvObj extends Entity {
                     height: h,
                     solid: true
                 };
-            case Circle(r): {type: ShapeType.CIRCLE, radius: r, solid: true / 2}
+            case Circle(r): {type: ShapeType.CIRCLE, radius: r / 2, solid: true}
         }
         body = new Body({
             x: sx,
