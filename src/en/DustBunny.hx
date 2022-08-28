@@ -93,6 +93,10 @@ class DustBunny extends Entity {
         }
 
         if(playerVec.length < 200) {
+            if(playerVec.length < 30 && world.player.isLight == false) {
+                world.player.lightness -= 1.0 * dt;
+            }
+
             playerVec = playerVec.normal * 200;
             body.acceleration = playerVec;
         }else {

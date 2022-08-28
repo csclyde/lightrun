@@ -172,7 +172,7 @@ class World extends Scene {
         vt.clear();
 
         vt.setStyle(8, 1, 0xFF0000);
-        vt.drawText(Math.floor(gw() / 2) - 70, 10, "DARKNESS: " + Math.floor(darkness * 10));
+        vt.drawText(Math.floor(gw() / 2) - 70, 10, "LIGHTNESS: " + Math.floor(player.lightness));
 
         spawnTimer += dt;
 

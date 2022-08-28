@@ -10,11 +10,15 @@ class Player extends Entity {
     var lightGraphics:h2d.Graphics;
     var lazerSpeed = 700;
     var chargeSpeed = .4;
-    var isLight = false;
+
+    public var isLight = false;
+
     var lastCollided:Body = null;
     var lazerPoints:Array<PointInTime> = [];
     var lazerTTL = 0.3;
     var lazerDir:Vector2;
+
+    public var lightness:Float;
 
     public function new(sx, sy) {
         super(world, sx, sy);
@@ -41,6 +45,8 @@ class Player extends Entity {
         lightCharge = 0.0;
         world.physWorld.add(body);
         enterLameMode(new Vector2(0, 0));
+
+        lightness = 100.0;
     }
 
     override function reset() {
@@ -96,12 +102,16 @@ class Player extends Entity {
         }
         if(lazerPoints.length > 1)
             drawLightbeam(lazerPoints.map(lp -> lp.point));
+
+        lightness = Util.clamp(lightness, 0, 100);
     }
 
     public function gainCharge() {
         // gain a second of charge
         var gain = Math.min(timeout.getS('lightmode') + 0.2, 3.0);
         timeout.set('lightmode', gain);
+
+        lightness += 1;
     }
 
     function enterLameMode(vel:Vector2) {
