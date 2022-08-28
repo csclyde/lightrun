@@ -3,6 +3,8 @@ package en;
 class Player extends Entity {
     public var graphics:h2d.Graphics;
 
+    var lightCharge:Float;
+
     public function new(sx, sy) {
         super(world, sx, sy);
 
@@ -23,7 +25,7 @@ class Player extends Entity {
         });
 
         graphics = new h2d.Graphics(world.scene);
-
+        lightCharge = 0.0;
         world.physWorld.add(body);
     }
 
@@ -97,5 +99,23 @@ class Player extends Entity {
         graphics.moveTo(0, 0);
         graphics.x = body.x;
         graphics.y = body.y;
+
+        if(input.isControlActive('primary')) {
+            lightCharge += et;
+        }else if(lightCharge > 0) {
+            timeout.set('lightmode', Math.min(lightCharge, 3.0));
+            lightCharge = 0;
+        }
+
+        if(timeout.has('lightmode')) {
+            body.shape.solid = false;
+            body.mass = 0;
+            trace('WHEE');
+
+            // COREY
+        }else {
+            body.shape.solid = true;
+            body.mass = 1.0;
+        }
     }
 }
