@@ -21,6 +21,8 @@ class World extends Scene {
     public var collision:Collision;
     public var fxProc:Fx;
 
+    public var worldGraphics:h2d.Graphics;
+
     public function new(p:Process) {
         super(p);
 
@@ -49,14 +51,18 @@ class World extends Scene {
         Trigger.setPhys(physWorld);
 
         lighting = new Lighting(this);
-
         ui = new UI(this);
         collision = new Collision(this);
         fxProc = new Fx(this);
+
+        worldGraphics = new h2d.Graphics(scene);
+        worldGraphics.lineStyle(3, 0x00FF00);
+        worldGraphics.drawRect(-50, -50, 100, 100);
     }
 
     override function init() {
         player = new en.Player(0, 0);
+        currentLevel = new Level(0, 0);
 
         Events.subscribe('player_died', (params) -> currentLevel.handlePlayerDeath());
 

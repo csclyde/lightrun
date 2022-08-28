@@ -85,42 +85,6 @@ var ControlScheme:Map<String, Control> = [
         group: 'gameplay',
         order: 7,
     },
-    'potion_1' => {
-        desc: 'Potion One',
-        defaultInput: Key.NUMBER_1,
-        group: 'gameplay',
-        order: 8,
-        action: (ctx:Game) -> {
-            Events.send('use_potion', {slot: 0});
-        }
-    },
-    'potion_2' => {
-        desc: 'Potion Two',
-        defaultInput: Key.NUMBER_2,
-        group: 'gameplay',
-        order: 9,
-        action: (ctx:Game) -> {
-            Events.send('use_potion', {slot: 1});
-        }
-    },
-    'potion_3' => {
-        desc: 'Potion Three',
-        defaultInput: Key.NUMBER_3,
-        group: 'gameplay',
-        order: 10,
-        action: (ctx:Game) -> {
-            Events.send('use_potion', {slot: 2});
-        }
-    },
-    'potion_4' => {
-        desc: 'Potion Four',
-        defaultInput: Key.NUMBER_4,
-        group: 'gameplay',
-        order: 11,
-        action: (ctx:Game) -> {
-            Events.send('use_potion', {slot: 3});
-        }
-    },
     'feedback' => {
         desc: 'Open the feedback menu',
         defaultInput: Key.F9,

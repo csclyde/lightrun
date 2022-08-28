@@ -15,7 +15,7 @@ class Input extends Process {
 
     public function new(p:Process) {
         super(p);
-        inputAllowed = false;
+        inputAllowed = true;
         awaitingRebind = false;
         cancelNextClick = false;
     }
