@@ -1,5 +1,6 @@
 package en;
 
+import hxd.fmt.fbx.BaseLibrary.TmpObject;
 import en.EnvShape.EnvObj;
 import h2d.TileGroup;
 
@@ -16,6 +17,7 @@ class Level extends Entity {
     public var graphics:h2d.Graphics;
 
     var shapeColor:Int;
+    var envById: Map<Int, EnvObj>;
 
     var triggers:Array<Trigger>;
 
@@ -23,6 +25,7 @@ class Level extends Entity {
         super(world, 0, 0);
 
         roomCollision = [];
+        envById = [];
 
         shapeColor = 0x0000FF;
 
@@ -156,7 +159,31 @@ class Level extends Entity {
                 ]
             }
         });
-        roomCollision.push(roomBody);
+        var shapeCount = 200;
+        for(i in 0...shapeCount) {
+            var envShape = Math.random() < 0.5 ? EnvShape.Square(Util.randRange(10, 100), Util.randRange(10, 100)) : EnvShape.Circle(Util.randRange(10, 50));
+            var env = new EnvObj(Util.randRange(-500, 500), Util.randRange(-500, 500), envShape);
+            registerEnvShape(env);
+            // env.body.dirty = true;
+        }
+
+        // for(y in 0...GRID_Y) {
+        //     for(x in 0...GRID_X) {
+        //         if(Math.random() <= THRESHOLD) {
+        //             var envShape = Math.random() < 0.5 ? EnvShape.Square(SIZE, SIZE) : EnvShape.Circle(SIZE);
+        //             var env = new EnvObj(x * SIZE, y * SIZE, envShape);
+        //             roomCollision.push(env.body);
+        //         }
+        //     }
+        // }
+    }
+    function registerEnvShape(obj: EnvObj){
+        envById[obj.body.id] = obj;
+        roomCollision.push(obj.body);
+    }
+    function unRegisterEnvShape(obj: EnvObj){
+        envById[obj.body.id] = null;
+        roomCollision.remove(obj.body);
     }
 
     override function update() {
