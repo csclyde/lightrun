@@ -37,6 +37,7 @@ class World extends Scene {
 
         scene = new h2d.Layers();
         scene.name = 'scene';
+        scene.setScale(0.5);
         hud = new h2d.Layers();
         hud.name = 'hud';
 
