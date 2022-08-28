@@ -136,31 +136,37 @@ class World extends Scene {
 
     override function update() {
         super.update();
-        drawLightbeam();
+        var LAZER_LEN = 20;
+        var playerPos = new Vector2(player.cx, player.cy);
+        var dir = (new Vector2(input.mouseWorldX, input.mouseWorldY) - playerPos).normal;
+        drawLightbeam(playerPos, dir, LAZER_LEN);
     }
     
     override function fixedUpdate() {
         super.fixedUpdate();
     }
     
-    function drawLightbeam(){
+    function drawLightbeam(origin: Vector2, direction: Vector2, len: Float, debug = false){
         lightGraphics.clear();
         if(input.isControlActive('primary')){
-            var to = (new Vector2(input.mouseWorldX, input.mouseWorldY)) - (new Vector2(player.cx, player.cy)).normal;
-            var lCast = currentLevel.linecast(new Vector2(input.mouseWorldX, input.mouseWorldY), new Vector2(player.cx, player.cy));
+            var to = origin + (direction * len);
+            var lCast = currentLevel.linecast(origin, to);
             if(lCast == null){
-                lightGraphics.lineStyle(3, 0xF01010);
-                lightGraphics.moveTo(player.cx, player.cy);
-                lightGraphics.lineTo(input.mouseWorldX, input.mouseWorldY);
-                return;
+                if(debug){
+                    lightGraphics.lineStyle(3, 0xF01010);
+                    lightGraphics.moveTo(origin.x, origin.y);
+                    lightGraphics.lineTo(to.x, to.y);
+                }
+            }else{
+                var hit = lCast.closest.hit;
+                var norm = lCast.closest.normal;
+                var remaining = (hit - origin).length;
+                var reflected = 2 * (norm * to) - to;
+                lightGraphics.lineStyle(3, 0xF0F010);
+                lightGraphics.moveTo(hit.x, hit.y);
+                lightGraphics.lineTo(hit.x, hit.y);
+                drawLightbeam(hit, reflected, remaining);
             }
-            var start = lCast.closest.hit;
-            var norm = lCast.closest.normal;
-            var reflected = 2 * (norm * to) - to;
-            var dest = start + reflected;
-            lightGraphics.lineStyle(3, 0xF0F010);
-            lightGraphics.moveTo(start.x, start.y);
-            lightGraphics.lineTo(dest.x, dest.y);
             //trace(start);
             //trace(dest);
         }
