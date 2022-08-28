@@ -172,7 +172,7 @@ class Level extends Entity {
         var env = envById[body.id];
         if(env == null)
             return;
-        world.getBrighter(env.GotHit());
+        world.getBrighter(env.gotHit());
     }
 
     function registerEnvObj(obj:EnvObj) {
@@ -202,23 +202,23 @@ class Level extends Entity {
     public function handlePlayerDeath() {}
 
     public function draw() {
-        graphics.clear();
 
-        for(obj in roomEnvObjs) {
-                draw_objs(obj);
-        }
+        for(obj in roomEnvObjs)
+            obj.draw();
     }
 
-    public function draw_objs(obj: EnvObj) {
+    /*
+    public function draw_obj(obj: EnvObj) {
         switch(obj.shapeInfo) {
             case ShapeInfo.Square(w,h,r):
-                draw_polygon(obj.sides, obj.GetVerts(), 0xFFFFFF, shapeColor);
+                draw_polygon(obj.sides, obj.getVerts(), 0xFFFFFF, shapeColor);
             case Circle(r):
                 draw_circle(obj.cx, obj.cy, r, 0xFFFFFF, shapeColor);
             case NGon(sides, r, rotation):
-                draw_polygon(sides, obj.GetVerts(), 0xFFFFFF, shapeColor);
+                draw_polygon(sides, obj.getVerts(), 0xFFFFFF, shapeColor);
         }
     }
+    */
 
     public function draw_line(from_x:Float, from_y:Float, to_x:Float, to_y:Float, color:Int, alpha:Float = 1.) {
         graphics.lineStyle(1, color, alpha);
@@ -231,16 +231,23 @@ class Level extends Entity {
         graphics.drawRect(min_x, min_y, width, height);
     }
 
-    public function draw_circle(x:Float, y:Float, radius:Float, color:Int, ?stroke:Int, alpha:Float = 1.) {
+    /*
+    public function draw_circle(x:Float, y:Float, radius:Float, color:Int, fillColor: Int, ?stroke:Int,  alpha:Float = 1.) {
         graphics.lineStyle(1, stroke, 1);
+        graphics.beginFill(fillColor);
         graphics.drawCircle(x, y, radius);
+        graphics.endFill();
     }
 
-    public function draw_polygon(count:Int, vertices:Array<Vector2>, color:Int, ?stroke:Int, alpha:Float = 1) {
+    public function draw_polygon(count:Int, vertices:Array<Vector2>, color:Int, fillColor: Int, ?stroke:Int, alpha:Float = 1) {
         if(count < 2)
             return;
         stroke != null ? graphics.lineStyle(1, stroke, 1) : graphics.lineStyle();
         graphics.moveTo(vertices[count - 1].x, vertices[count - 1].y);
         for(i in 0...count) graphics.lineTo(vertices[i].x, vertices[i].y);
+        graphics.beginFill(fillColor);
+        for(i in 0...count) graphics.addVertex(vertices[i].x, vertices[i].y);
+        graphics.endFill();
     }
+    */
 }
