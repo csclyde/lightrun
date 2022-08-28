@@ -9,9 +9,8 @@ class Player extends Entity {
         body = new Body({
             x: sx,
             y: sy,
-            // mass: 1.0,
+            mass: 1.0,
             // drag_length: 20,
-            max_velocity_length: 50,
             shapes: [
                 {
                     type: CIRCLE,
@@ -68,29 +67,26 @@ class Player extends Entity {
         cx = body.x;
         cy = body.y;
 
-        if(input.isControlActive('left')) {
-            body.acceleration.x -= 500;
-        }
+        var accelX = 0.0;
+        var accelY = 0.0;
+        var accel = 100;
 
-        if(input.isControlActive('right')) {
-            body.acceleration.x += 500;
-        }
-
-        if(!input.isControlActive('left') && !input.isControlActive('right')) {
-            body.acceleration.x = 0;
-        }
-
+        // apply the controls to players acceleration
         if(input.isControlActive('up')) {
-            body.acceleration.y -= 500;
+            accelY -= accel;
         }
-
         if(input.isControlActive('down')) {
-            body.acceleration.y += 500;
+            accelY += accel;
+        }
+        if(input.isControlActive('left')) {
+            accelX -= accel;
+        }
+        if(input.isControlActive('right')) {
+            accelX += accel;
         }
 
-        if(!input.isControlActive('up') && !input.isControlActive('down')) {
-            body.acceleration.y = 0;
-        }
+        body.acceleration.set(accelX, accelY);
+        body.max_velocity_length = 100;
 
         graphics.clear();
         graphics.lineStyle(2, 0xFF0000);
