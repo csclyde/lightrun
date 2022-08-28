@@ -31,6 +31,8 @@ class World extends Scene {
 
     var shouldDraw = false;
 
+    var bunnies:Array<DustBunny>;
+
     public var darkness:Float;
 
     public function new(p:Process) {
@@ -47,6 +49,8 @@ class World extends Scene {
         hud = new h2d.Layers();
         hud.name = 'hud';
         psystem = new PSystem(this);
+
+        bunnies = [];
 
         root.add(scene, Const.MIDGROUND_OBJECTS);
         root.add(hud, Const.FOREGROUND_OBJECTS);
@@ -91,6 +95,11 @@ class World extends Scene {
             exit: collision.onExit,
             stay: collision.onStay,
         });
+
+        for(i in 0...50) {
+            var db = new DustBunny(Util.randRange(-100, 100), Util.randRange(-100, 100));
+            bunnies.push(db);
+        }
     }
 
     override function reset() {
@@ -160,6 +169,12 @@ class World extends Scene {
 
         vt.setStyle(8, 1, 0xFF0000);
         vt.drawText(Math.floor(gw() / 2) - 70, 10, "DARKNESS: " + Math.floor(darkness * 10));
+
+        for(db in bunnies) {
+            var dist = player.body.get_position() - db.body.get_position();
+
+            if(dist.length > 500) {}
+        }
     }
 
     override function fixedUpdate() {
