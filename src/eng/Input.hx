@@ -102,9 +102,9 @@ class Input extends Process {
             return;
 
         // special case for skipping text
-        if(Key.isPressed(ControlScheme['weapon1'].defaultInput)) {
-            Events.send('skip_speech');
-        }
+        //if(Key.isPressed(ControlScheme['weapon1'].defaultInput)) {
+        //    Events.send('skip_speech');
+        //}
 
         for(c in ControlScheme) {
             // if its a gameplay control and controls are inactive, release the control

@@ -66,6 +66,10 @@ class Level extends Entity {
             return null;
         }
     }
+    public function linecast(start: Vector2, end: Vector2){
+        var line = echo.Line.get_from_vectors(start, end);
+        return line.linecast(roomCollision);
+    }
 
     public function linecastLength(start:Vector2, end:Vector2) {
         var line = echo.Line.get_from_vectors(start, end);
@@ -103,6 +107,7 @@ class Level extends Entity {
                 if(Math.random() <= THRESHOLD){
                     var envShape = Math.random() < 0.5 ? EnvShape.Square(SIZE,SIZE) : EnvShape.Circle(SIZE);
                     var env = new EnvObj(x * SIZE ,y * SIZE, envShape);
+                    roomCollision.push(env.body);
                 }
             }
         }

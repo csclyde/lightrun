@@ -1,5 +1,6 @@
 package scene;
 
+import h3d.shader.pbr.Light.LightEvaluation;
 import h2d.SpriteBatch;
 import echo.World;
 import proc.*;
@@ -22,6 +23,7 @@ class World extends Scene {
     public var fxProc:Fx;
 
     public var worldGraphics:h2d.Graphics;
+    public var lightGraphics:h2d.Graphics;
 
     public function new(p:Process) {
         super(p);
@@ -58,6 +60,9 @@ class World extends Scene {
         worldGraphics = new h2d.Graphics(scene);
         worldGraphics.lineStyle(3, 0x00FF00);
         worldGraphics.drawRect(-50, -50, 100, 100);
+
+        lightGraphics = new h2d.Graphics(scene);
+        lightGraphics.lineStyle(3, 0xEED707);
     }
 
     override function init() {
@@ -131,5 +136,16 @@ class World extends Scene {
 
     override function fixedUpdate() {
         super.fixedUpdate();
+    }
+
+    function drawLightbeam(){
+        lightGraphics.clear();
+        if(input.isControlActive('primary')){
+            var lCast = currentLevel.linecast(new Vector2(input.mouseWorldX, input.mouseWorldY), new Vector2(player.cx, player.cy));
+            if(lCast == null)
+                return;
+            var start = lCast.closest.hit;
+            var dir = lCast.closest.inverse_normal;
+        }
     }
 }

@@ -37,7 +37,7 @@ var ControlScheme:Map<String, Control> = [
             }
         }
     },
-    'weapon1' => {
+    'primary' => {
         desc: 'Primary weapon',
         defaultInput: Key.MOUSE_LEFT,
         group: 'gameplay',
@@ -49,7 +49,7 @@ var ControlScheme:Map<String, Control> = [
             Events.send('release_weapon1', {x: ctx.input.mouseWorldX, y: ctx.input.mouseWorldY});
         }
     },
-    'weapon2' => {
+    'secondary' => {
         desc: 'Offhand weapon',
         defaultInput: Key.MOUSE_RIGHT,
         group: 'gameplay',
