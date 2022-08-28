@@ -1,47 +1,72 @@
 package en;
 
+import echo.shape.Rect;
+import echo.shape.Polygon;
 import echo.data.Types.ShapeType;
 
-enum EnvShape {
+enum ShapeInfo {
     Circle(r:Float);
-    Square(w:Float, h:Float);
+    Square(w:Float, h:Float, rotation: Float);
+    NGon(sides: Int, r: Float, rotation: Float);
 }
 
 class EnvObj extends Entity {
     public var shapeColor:Int;
     public var maxEmission: Float = 5;
     public var extraBrightness: Float = 0;
-    public var curEmitted: Float = 0;
+    public var baseBrightness: Float = 0;
+    public var shapeInfo: ShapeInfo;
+    public var rotation: Float;
+    public var sides: Int;
+    public var radius: Float;
+    var decay: Float = 0.75;
+    var nextBright: Float = 1;
 
-    public function new(sx:Float, sy:Float, shape:EnvShape, color:Int = 0xFFFFFFFF) {
+    public function new(sx:Float, sy:Float, shape:ShapeInfo, color:Int = 0xFFFFFFFF) {
         super(world, sx, sy);
         shapeColor = Util.randRange(0x00FF00, 0x0000FF);
 
+        shapeInfo = shape;
         var physShape:echo.data.Options.ShapeOptions = switch(shape) {
-            case Square(w, h): {
+            case Square(w, h, rot): 
+                radius = w/2;
+                sides = 4;
+                rotation = rot;
+                {
                     type: ShapeType.RECT,
                     width: w,
                     height: h,
+                    rotation: rotation
                 };
-            case Circle(r): {type: ShapeType.CIRCLE, radius: r / 2}
+            case Circle(r): 
+                sides = 0;
+                radius = r;
+                {type: ShapeType.CIRCLE, radius: r}
+            case NGon(s, r, rot):
+                sides = s;
+                radius = r;
+                rotation = rot;
+                {
+                    type: ShapeType.POLYGON,
+                    sides: s,
+                    radius: r,
+                    rotation: rotation
+                }
         }
         body = new Body({
             x: sx,
             y: sy,
             shapes: [physShape],
             mass: STATIC,
-            rotation: Util.randRange(0, 360),
         });
         world.physWorld.add(body);
-
-        // var graphic = new h2d.Graphics(world.scene);
-        // graphic.lineStyle(1, 0x0000FF);
-        // switch(shape) {
-        //     case Square(w, h):
-        //         graphic.drawRect(sx - w / 2, sy - h / 2, w, h);
-        //     case Circle(r):
-        //         graphic.drawCircle(sx, sy, r / 2, 0);
-        // }
+    }
+    public function GetPos(){
+        return new Vector2(body.x, body.y);
+    }
+    public function GetVerts(){
+        var p:Polygon = cast body.shape;
+        return p.vertices;
     }
     public function GotHit():Float{
         return 1;

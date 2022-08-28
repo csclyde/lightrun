@@ -1,5 +1,7 @@
 package en;
 
+import echo.data.Options.RayOptions;
+import en.EnvShape.ShapeInfo;
 import hxd.fmt.fbx.BaseLibrary.TmpObject;
 import en.EnvShape.EnvObj;
 import h2d.TileGroup;
@@ -14,6 +16,7 @@ class Level extends Entity {
     public var difficulty:Float;
 
     public var roomCollision:Array<Body>;
+    public var roomEnvObjs:Array<EnvObj>;
     public var graphics:h2d.Graphics;
 
     var shapeColor:Int;
@@ -25,6 +28,7 @@ class Level extends Entity {
         super(world, 0, 0);
 
         roomCollision = [];
+        roomEnvObjs = [];
         envById = [];
 
         shapeColor = 0x0000FF;
@@ -107,11 +111,6 @@ class Level extends Entity {
     }
 
     function createCollision() {
-        var GRID_X = 20;
-        var GRID_Y = 20;
-        var SIZE = 10;
-        var THRESHOLD = 0.1;
-
         // draw room boundaries, then fill with shapes
         // addHexagon(-210, 140);
         // addHexagon(-210, -140);
@@ -125,21 +124,21 @@ class Level extends Entity {
             // var envShape = Math.random() < 0.5 ? EnvShape.Square(Util.randRange(10, 100), Util.randRange(10, 100)) : EnvShape.Circle(Util.randRange(10, 50));
             // var env = new EnvObj(Util.randRange(-500, 500), Util.randRange(-500, 500), envShape);
             // roomCollision.push(env.body);
-
-            var shapeBody = world.physWorld.make({
-                x: Util.randRange(-500, 500),
-                y: Util.randRange(-500, 500),
-                mass: STATIC,
-                shape: {
-                    type: POLYGON,
-                    sides: Util.randRange(3, 8),
-                    radius: Util.randRange(10, 100),
-                    rotation: Util.randRange(0, 360),
-                }
-            });
-
-            roomCollision.push(shapeBody);
+            makeRandomEnvObj();
         }
+    }
+    function makeRandomEnvObj(){
+        var shapeInfo: ShapeInfo;
+        var roll = Math.random();
+        if(roll < 0.33)
+            shapeInfo = ShapeInfo.NGon(4, Util.randRange(10, 50), Util.randRange(0,360));
+        else if (roll < 0.66)
+            shapeInfo = ShapeInfo.Circle(Util.randRange(10, 50));
+        else
+            shapeInfo = ShapeInfo.NGon(Util.randRange(3,12), Util.randRange(10, 50), Util.randRange(0,360));
+                
+        var envObj = new EnvObj(Util.randRange(-500, 500), Util.randRange(-500, 500), shapeInfo);
+        registerEnvObj(envObj);
     }
 
     function addHexagon(x, y, rr = 140) {
@@ -161,21 +160,12 @@ class Level extends Entity {
         });
         var shapeCount = 200;
         for(i in 0...shapeCount) {
-            var envShape = Math.random() < 0.5 ? EnvShape.Square(Util.randRange(10, 100), Util.randRange(10, 100)) : EnvShape.Circle(Util.randRange(10, 50));
-            var env = new EnvObj(Util.randRange(-500, 500), Util.randRange(-500, 500), envShape);
-            registerEnvShape(env);
-            // env.body.dirty = true;
+            var shapeInfo = Math.random() < 0.5 ? 
+                ShapeInfo.Square(Util.randRange(10, 100), Util.randRange(10, 100), Util.randRange(0,360)) : 
+                ShapeInfo.Circle(Util.randRange(10, 50));
+            var envObj = new EnvObj(Util.randRange(-500, 500), Util.randRange(-500, 500), shapeInfo);
+            registerEnvObj(envObj);
         }
-
-        // for(y in 0...GRID_Y) {
-        //     for(x in 0...GRID_X) {
-        //         if(Math.random() <= THRESHOLD) {
-        //             var envShape = Math.random() < 0.5 ? EnvShape.Square(SIZE, SIZE) : EnvShape.Circle(SIZE);
-        //             var env = new EnvObj(x * SIZE, y * SIZE, envShape);
-        //             roomCollision.push(env.body);
-        //         }
-        //     }
-        // }
     }
     public function hitEnvBody(body: Body){
         var env = envById[body.id];
@@ -184,14 +174,16 @@ class Level extends Entity {
         world.GetBrighter(env.GotHit());
     }
 
-    function registerEnvShape(obj:EnvObj) {
+    function registerEnvObj(obj:EnvObj) {
         envById[obj.body.id] = obj;
         roomCollision.push(obj.body);
+        roomEnvObjs.push(obj);
     }
 
-    function unRegisterEnvShape(obj:EnvObj) {
+    function unRegisterEnvObj(obj:EnvObj) {
         envById[obj.body.id] = null;
         roomCollision.remove(obj.body);
+        roomEnvObjs.remove(obj);
     }
 
     override function update() {
@@ -211,30 +203,19 @@ class Level extends Entity {
     public function draw() {
         graphics.clear();
 
-        for(b in roomCollision) {
-            for(s in b.shapes) {
-                draw_shape(s);
-            }
+        for(obj in roomEnvObjs) {
+                draw_objs(obj);
         }
     }
 
-    public function draw_shape(shape:echo.Shape) {
-        var shape_pos = shape.get_position();
-        switch(shape.type) {
-            case RECT:
-                var r:echo.shape.Rect = cast shape;
-                if(r.transformed_rect != null && r.rotation != 0) {
-                    draw_polygon(r.transformed_rect.count, r.transformed_rect.vertices, 0xFFFFFF, shapeColor);
-                }else draw_rect(shape_pos.x - r.width * 0.5, shape_pos.y - r.height * 0.5, r.width, r.height, 0xFFFFFF, 0x0000FF, 0);
-            case CIRCLE:
-                var c:echo.shape.Circle = cast shape;
-
-                draw_circle(shape_pos.x, shape_pos.y, c.radius, 0xFFFFFF, shapeColor);
-
-            case POLYGON:
-                var p:echo.shape.Polygon = cast shape;
-
-                draw_polygon(p.count, p.vertices, 0xFFFFFF, shapeColor);
+    public function draw_objs(obj: EnvObj) {
+        switch(obj.shapeInfo) {
+            case ShapeInfo.Square(w,h,r):
+                draw_polygon(obj.sides, obj.GetVerts(), 0xFFFFFF, shapeColor);
+            case Circle(r):
+                draw_circle(obj.cx, obj.cy, r, 0xFFFFFF, shapeColor);
+            case NGon(sides, r, rotation):
+                draw_polygon(sides, obj.GetVerts(), 0xFFFFFF, shapeColor);
         }
     }
 
