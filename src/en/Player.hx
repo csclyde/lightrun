@@ -33,6 +33,7 @@ class Player extends Entity {
                 {
                     type: CIRCLE,
                     radius: 10,
+                    solid: true,
                 }
             ]
         });

@@ -17,7 +17,7 @@ class Level extends Entity {
     public var graphics:h2d.Graphics;
 
     var shapeColor:Int;
-    var envById: Map<Int, EnvObj>;
+    var envById:Map<Int, EnvObj>;
 
     var triggers:Array<Trigger>;
 
@@ -177,11 +177,13 @@ class Level extends Entity {
         //     }
         // }
     }
-    function registerEnvShape(obj: EnvObj){
+
+    function registerEnvShape(obj:EnvObj) {
         envById[obj.body.id] = obj;
         roomCollision.push(obj.body);
     }
-    function unRegisterEnvShape(obj: EnvObj){
+
+    function unRegisterEnvShape(obj:EnvObj) {
         envById[obj.body.id] = null;
         roomCollision.remove(obj.body);
     }
