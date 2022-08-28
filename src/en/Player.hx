@@ -42,7 +42,7 @@ class Player extends Entity {
         lightGraphics = new h2d.Graphics(world.scene);
         lightCharge = 0.0;
         world.physWorld.add(body);
-        enterLameMode();
+        enterLameMode(new Vector2(0, 0));
 
         darkness = 0.0;
     }
@@ -102,11 +102,12 @@ class Player extends Entity {
             drawLightbeam(lazerPoints.map(lp -> lp.point));
     }
 
-    function enterLameMode() {
+    function enterLameMode(vel:Vector2) {
         isLight = false;
         body.active = true;
         body.mass = 1.0;
         lightGraphics.clear();
+        body.velocity.set(vel.x, vel.y);
     }
 
     function lameControl() {
@@ -157,6 +158,8 @@ class Player extends Entity {
         isLight = true;
         body.active = false;
         body.mass = 0;
+        body.velocity.set(0, 0);
+        body.acceleration.set(0, 0);
         graphics.clear();
         lastCollided = null;
         lazerPoints = [{point: new Vector2(cx, cy), time: et}];
@@ -165,11 +168,16 @@ class Player extends Entity {
     }
 
     function lightControl() {
-        if(timeout.getS("lightmode") == 0)
-            enterLameMode();
         var playerPos = new Vector2(cx, cy);
         var points = calculateLightbeam(playerPos, lazerDir, dt * lazerSpeed, 0, [playerPos], true);
         var lastPoint = points[points.length - 1];
+
+        if(timeout.getS("lightmode") == 0) {
+            var exitVel = lastPoint - body.get_position();
+            exitVel = exitVel.normal * 50;
+            enterLameMode(exitVel);
+        }
+
         lazerPoints.push({point: lastPoint, time: et});
         body.x = lastPoint.x;
         body.y = lastPoint.y;
