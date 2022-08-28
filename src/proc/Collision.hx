@@ -13,6 +13,7 @@ class Collision extends Process {
     override function reset() {}
 
     public function onEnter(a:Body, b:Body, c:Array<CollisionData>) {
+        trace('fuck');
         var playerInvolved = world.player.isPlayerBody(a, b);
 
         var levelBody = world.currentLevel == null ? null : world.currentLevel.getRoomBody(a, b);

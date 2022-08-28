@@ -43,10 +43,10 @@ class World extends Scene {
         root.add(hud, Const.FOREGROUND_OBJECTS);
 
         physWorld = new echo.World({
-            x: 0,
-            y: 0,
-            width: 1,
-            height: 1,
+            x: -2000,
+            y: -2000,
+            width: 4000,
+            height: 4000,
             iterations: 5,
         });
 
@@ -138,9 +138,9 @@ class World extends Scene {
         super.fixedUpdate();
     }
 
-    function drawLightbeam(){
+    function drawLightbeam() {
         lightGraphics.clear();
-        if(input.isControlActive('primary')){
+        if(input.isControlActive('primary')) {
             var lCast = currentLevel.linecast(new Vector2(input.mouseWorldX, input.mouseWorldY), new Vector2(player.cx, player.cy));
             if(lCast == null)
                 return;
