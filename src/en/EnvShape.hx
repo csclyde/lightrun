@@ -10,7 +10,8 @@ enum EnvShape {
 class EnvObj extends Entity {
     public var shapeColor:Int;
     public var maxEmission: Float = 5;
-    public var curLightLevel: Float = 1;
+    public var extraBrightness: Float = 0;
+    public var curEmitted: Float = 0;
 
     public function new(sx:Float, sy:Float, shape:EnvShape, color:Int = 0xFFFFFFFF) {
         super(world, sx, sy);
