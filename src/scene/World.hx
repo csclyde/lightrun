@@ -58,8 +58,6 @@ class World extends Scene {
         fxProc = new Fx(this);
 
         worldGraphics = new h2d.Graphics(scene);
-        worldGraphics.lineStyle(3, 0x00FF00);
-        worldGraphics.drawRect(-50, -50, 100, 100);
 
         lightGraphics = new h2d.Graphics(scene);
         lightGraphics.lineStyle(3, 0xEED707);

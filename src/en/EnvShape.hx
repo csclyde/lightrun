@@ -22,18 +22,18 @@ class EnvObj extends Entity {
             x: sx,
             y: sy,
             shapes: [physShape],
-            mass: STATIC
+            mass: STATIC,
+            rotation: Util.randRange(0, 360),
         });
         world.physWorld.add(body);
 
-        var graphic = new h2d.Graphics(world.scene);
-        graphic.beginFill(0xC9823F);
-        switch(shape) {
-            case Square(w, h):
-                graphic.drawRect(sx - w / 2, sy - h / 2, w, h);
-            case Circle(r):
-                graphic.drawCircle(sx, sy, r / 2, 0);
-        }
-        graphic.endFill();
+        // var graphic = new h2d.Graphics(world.scene);
+        // graphic.lineStyle(1, 0x0000FF);
+        // switch(shape) {
+        //     case Square(w, h):
+        //         graphic.drawRect(sx - w / 2, sy - h / 2, w, h);
+        //     case Circle(r):
+        //         graphic.drawCircle(sx, sy, r / 2, 0);
+        // }
     }
 }

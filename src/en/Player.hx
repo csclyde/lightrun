@@ -9,6 +9,9 @@ class Player extends Entity {
         body = new Body({
             x: sx,
             y: sy,
+            material: {
+                elasticity: 0.5
+            },
             mass: 1.0,
             // drag_length: 20,
             shapes: [
@@ -89,10 +92,9 @@ class Player extends Entity {
         body.max_velocity_length = 100;
 
         graphics.clear();
-        graphics.lineStyle(2, 0xFF0000);
+        graphics.lineStyle(1, 0xFF0000);
         graphics.drawCircle(0, 0, 10);
         graphics.moveTo(0, 0);
-        graphics.lineTo(body.velocity.x, body.velocity.y);
         graphics.x = body.x;
         graphics.y = body.y;
     }
