@@ -8,11 +8,11 @@ enum EnvShape{
 }
 
 class EnvObj extends Entity {
-    public function new (sx: Float, sy:Float, shape: EnvShape, color: Int = 0xCCCCCC){
+    public function new (sx: Float, sy:Float, shape: EnvShape, color: Int = 0xFFFFFFFF){
         super(world,sx,sy);
         var physShape:echo.data.Options.ShapeOptions = switch (shape) {
             case Square(w,h): {type: ShapeType.RECT, width: w, height: h};
-            case Circle(r): {type: ShapeType.CIRCLE, radius: r}
+            case Circle(r): {type: ShapeType.CIRCLE, radius: r/2}
         }
         body = new Body({
             x:sx,
@@ -28,7 +28,7 @@ class EnvObj extends Entity {
             case Square(w, h):
                 graphic.drawRect(sx - w/2, sy - h/2, w, h);
             case Circle(r):
-                graphic.drawCircle(sx,sy,r,0);
+                graphic.drawCircle(sx,sy,r/2,0);
         }
         graphic.endFill();
     }

@@ -29,6 +29,7 @@ class Level extends Entity {
         offsetY = -(mapHeight / 2) * tileHeight;
 
         triggers = [];
+        build();
     }
 
     override function reset() {
@@ -95,12 +96,13 @@ class Level extends Entity {
     function createCollision() {
         var GRID_X = 20;
         var GRID_Y = 20;
+        var SIZE = 10;
         var THRESHOLD = 0.1;
         for(y in 0...GRID_Y){
             for(x in 0...GRID_X){
                 if(Math.random() <= THRESHOLD){
-                    var envShape = Math.random() < 0.5 ? EnvShape.Square(1,1) : EnvShape.Circle(1);
-                    var env = new EnvObj(x,y, envShape);
+                    var envShape = Math.random() < 0.5 ? EnvShape.Square(SIZE,SIZE) : EnvShape.Circle(SIZE);
+                    var env = new EnvObj(x * SIZE ,y * SIZE, envShape);
                 }
             }
         }
