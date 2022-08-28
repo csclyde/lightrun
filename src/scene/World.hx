@@ -43,10 +43,10 @@ class World extends Scene {
         root.add(hud, Const.FOREGROUND_OBJECTS);
 
         physWorld = new echo.World({
-            x: 0,
-            y: 0,
-            width: 1,
-            height: 1,
+            x: -2000,
+            y: -2000,
+            width: 4000,
+            height: 4000,
             iterations: 5,
         });
 
@@ -86,10 +86,10 @@ class World extends Scene {
 
         root.filter = null;
 
-        //if(currentLevel != null) {
+        // if(currentLevel != null) {
         //    currentLevel.destroy();
         //    currentLevel = null;
-        //}
+        // }
 
         speed = 1.0;
     }
@@ -141,23 +141,23 @@ class World extends Scene {
         var dir = (new Vector2(input.mouseWorldX, input.mouseWorldY) - playerPos).normal;
         drawLightbeam(playerPos, dir, LAZER_LEN, true);
     }
-    
+
     override function fixedUpdate() {
         super.fixedUpdate();
     }
-    
-    function drawLightbeam(origin: Vector2, direction: Vector2, len: Float, debug = false){
+
+    function drawLightbeam(origin:Vector2, direction:Vector2, len:Float, debug = false) {
         lightGraphics.clear();
-        if(input.isControlActive('primary')){
+        if(input.isControlActive('primary')) {
             var to = origin + (direction * len);
             var lCast = currentLevel.linecast(origin, to);
-            if(lCast == null){
-                if(debug){
+            if(lCast == null) {
+                if(debug) {
                     lightGraphics.lineStyle(3, 0xF01010);
                     lightGraphics.moveTo(origin.x, origin.y);
                     lightGraphics.lineTo(to.x, to.y);
                 }
-            }else{
+            }else {
                 var hit = lCast.closest.hit;
                 var norm = lCast.closest.normal;
                 var remaining = (hit - origin).length;
@@ -167,8 +167,8 @@ class World extends Scene {
                 lightGraphics.lineTo(hit.x, hit.y);
                 drawLightbeam(hit, reflected, remaining);
             }
-            //trace(start);
-            //trace(dest);
+            // trace(start);
+            // trace(dest);
         }
     }
 }

@@ -22,7 +22,7 @@ class EnvObj extends Entity {
             x: sx,
             y: sy,
             shapes: [physShape],
-            kinematic: true
+            mass: STATIC
         });
         world.physWorld.add(body);
 
