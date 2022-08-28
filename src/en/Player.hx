@@ -173,6 +173,9 @@ class Player extends Entity {
         lazerPoints.push({point: lastPoint, time: et});
         body.x = lastPoint.x;
         body.y = lastPoint.y;
+
+        // kill enemies at this point
+        world.killBunnies(body.x, body.y);
     }
 
     function drawLightPreview(points:Array<Vector2>) {
@@ -190,7 +193,8 @@ class Player extends Entity {
             lightGraphics.lineTo(points[i].x, points[i].y);
         }
     }
-    function calculateLightbeam(origin:Vector2, direction:Vector2, len:Float, depth: Int, points: Array<Vector2>, isReal: Bool, debug = false) {
+
+    function calculateLightbeam(origin:Vector2, direction:Vector2, len:Float, depth:Int, points:Array<Vector2>, isReal:Bool, debug = false) {
         if(depth == 30)
             return points;
         var to = origin + (direction * len);
@@ -216,7 +220,7 @@ class Player extends Entity {
             var y = direction.y - dot * norm.y;
 
             points.push(hit);
-            lazerDir = new Vector2(x,y).normal;
+            lazerDir = new Vector2(x, y).normal;
             calculateLightbeam(hit, lazerDir, remaining, depth + 1, points, isReal);
             return points;
         }

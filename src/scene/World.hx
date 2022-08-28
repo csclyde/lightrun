@@ -34,6 +34,9 @@ class World extends Scene {
 
     public var darkness:Float;
 
+    public var spawnRate:Float;
+    public var spawnTimer:Float;
+
     public function new(p:Process) {
         super(p);
 
@@ -72,10 +75,21 @@ class World extends Scene {
         vt = new VectorText(hud, 8);
 
         darkness = 0.0;
+        spawnRate = 0.5;
+        spawnTimer = 0.0;
     }
 
     public function getBrighter(amount:Float) {
         darkness -= amount;
+    }
+
+    public function killBunnies(x:Float, y:Float) {
+        for(b in bunnies) {
+            if(b.body.x > x - 10 && b.body.x < x + 10 && b.body.y > y - 10 && b.body.y < y + 10) {
+                b.die();
+                bunnies.remove(b);
+            }
+        }
     }
 
     override function init() {
@@ -94,10 +108,10 @@ class World extends Scene {
             stay: collision.onStay,
         });
 
-        for(i in 0...50) {
-            var db = new DustBunny(Util.randRange(-100, 100), Util.randRange(-100, 100));
-            bunnies.push(db);
-        }
+        // for(i in 0...50) {
+        //     var db = new DustBunny(Util.randRange(-100, 100), Util.randRange(-100, 100));
+        //     bunnies.push(db);
+        // }
     }
 
     override function reset() {
@@ -168,10 +182,12 @@ class World extends Scene {
         vt.setStyle(8, 1, 0xFF0000);
         vt.drawText(Math.floor(gw() / 2) - 70, 10, "DARKNESS: " + Math.floor(darkness * 10));
 
-        for(db in bunnies) {
-            var dist = player.body.get_position() - db.body.get_position();
+        spawnTimer += dt;
 
-            if(dist.length > 500) {}
+        if(spawnTimer > spawnRate) {
+            spawnTimer -= spawnRate;
+            var db = new DustBunny(player.cx + Util.randRange(-200, 200), player.cy + Util.randRange(-200, 200));
+            bunnies.push(db);
         }
     }
 

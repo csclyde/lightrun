@@ -4,7 +4,7 @@ import hxd.fmt.grd.Data.ColorStop;
 import echo.data.Options.LinecastOptions;
 
 class DustBunny extends Entity {
-    public var graphics:h2d.Graphics;
+    public var g:h2d.Graphics;
 
     public function new(sx, sy) {
         super(world, sx, sy);
@@ -27,9 +27,9 @@ class DustBunny extends Entity {
             ]
         });
 
-        graphics = new h2d.Graphics(world.scene);
-        graphics.lineStyle(1, 0x7C3D8A);
-        graphics.drawCircle(0, 0, 3, 10);
+        g = new h2d.Graphics(world.scene);
+        g.lineStyle(1, 0x7C3D8A);
+        g.drawCircle(0, 0, 3, 10);
         world.physWorld.add(body);
     }
 
@@ -63,11 +63,21 @@ class DustBunny extends Entity {
     }
 
     override public function die() {
+        if(dead)
+            return;
+
         body.mass = 0;
+        body.active = false;
 
         dead = true;
 
         Events.send('bunny_died');
+
+        var shape:echo.shape.Circle = cast body.shape;
+
+        var count = Math.floor(shape.radius / 1.5);
+
+        // COREY MAKE AN EFFECT HERE
     }
 
     public override function preUpdate() {}
@@ -75,8 +85,8 @@ class DustBunny extends Entity {
     public override function update() {
         cx = body.x;
         cy = body.y;
-        graphics.x = body.x;
-        graphics.y = body.y;
+        g.x = body.x;
+        g.y = body.y;
 
         var playerVec = world.player.body.get_position() - body.get_position();
 
@@ -90,5 +100,7 @@ class DustBunny extends Entity {
         }else {
             body.acceleration.set(0, 0);
         }
+
+        if(dead) {}
     }
 }
