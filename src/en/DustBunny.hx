@@ -71,6 +71,8 @@ class DustBunny extends Entity {
 
         dead = true;
 
+        g.remove();
+
         Events.send('bunny_died');
 
         var shape:echo.shape.Circle = cast body.shape;
