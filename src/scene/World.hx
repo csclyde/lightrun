@@ -26,6 +26,8 @@ class World extends Scene {
 
     var shouldDraw = false;
 
+    public var darkness:Float;
+
     public function new(p:Process) {
         super(p);
 
@@ -60,15 +62,19 @@ class World extends Scene {
         fxProc = new Fx(this);
 
         worldGraphics = new h2d.Graphics(scene);
+
+        darkness = 0.0;
     }
 
-    public function GetBrighter(amount: Float){
-
+    public function getBrighter(amount:Float) {
+        darkness -= amount;
     }
 
     override function init() {
         player = new en.Player(0, 0);
         currentLevel = new Level(0, 0);
+
+        darkness = 0.0;
 
         Events.subscribe('player_died', (params) -> currentLevel.handlePlayerDeath());
 
@@ -137,6 +143,10 @@ class World extends Scene {
 
     override function update() {
         super.update();
+
+        darkness += dt;
+
+        game.fade.alpha = Math.min(0.95, (darkness / 10));
     }
 
     override function fixedUpdate() {

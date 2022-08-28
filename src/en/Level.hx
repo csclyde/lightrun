@@ -177,11 +177,12 @@ class Level extends Entity {
         //     }
         // }
     }
-    public function hitEnvBody(body: Body){
+
+    public function hitEnvBody(body:Body) {
         var env = envById[body.id];
         if(env == null)
             return;
-        world.GetBrighter(env.GotHit());
+        world.getBrighter(env.GotHit());
     }
 
     function registerEnvShape(obj:EnvObj) {
