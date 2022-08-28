@@ -180,7 +180,7 @@ class Player extends Entity {
             lightGraphics.lineTo(points[i].x, points[i].y);
         }
     }
-    function calculateLightbeam(origin:Vector2, direction:Vector2, len:Float, depth: Int, points: Array<Vector2>, debug = false) {
+    function calculateLightbeam(origin:Vector2, direction:Vector2, len:Float, depth: Int, points: Array<Vector2>, isReal: Bool, debug = false) {
         if(depth == 30)
             return points;
         var to = origin + (direction * len);
@@ -190,6 +190,8 @@ class Player extends Entity {
             lightGraphics.lineStyle(1, 0xf0f010);
             lightGraphics.moveTo(origin.x, origin.y);
             lightGraphics.lineTo(to.x, to.y);
+            if(isReal)
+                world.currentLevel.hitEnvBody(lCast.body);
             points.push(to);
             return points;
         }else {
@@ -206,7 +208,7 @@ class Player extends Entity {
             
             points.push(hit);
             lazerDir = new Vector2(x,y).normal;
-            calculateLightbeam(hit, lazerDir, remaining, depth + 1, points);
+            calculateLightbeam(hit, lazerDir, remaining, depth + 1, points, isReal);
             return points;
         }
     }

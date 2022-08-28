@@ -9,6 +9,8 @@ enum EnvShape {
 
 class EnvObj extends Entity {
     public var shapeColor:Int;
+    public var maxEmission: Float = 5;
+    public var curLightLevel: Float = 1;
 
     public function new(sx:Float, sy:Float, shape:EnvShape, color:Int = 0xFFFFFFFF) {
         super(world, sx, sy);
@@ -39,5 +41,8 @@ class EnvObj extends Entity {
         //     case Circle(r):
         //         graphic.drawCircle(sx, sy, r / 2, 0);
         // }
+    }
+    public function GotHit():Float{
+        return 1;
     }
 }
