@@ -175,7 +175,7 @@ class Player extends Entity {
         body.y = lastPoint.y;
 
         // kill enemies at this point
-        world.killBunnies(body.x, body.y);
+        world.killBunnies(body.x, body.y, 5);
     }
 
     function drawLightPreview(points:Array<Vector2>) {

@@ -68,16 +68,12 @@ class DustBunny extends Entity {
 
         body.mass = 0;
         body.active = false;
-
         dead = true;
+        body.dispose();
 
         g.remove();
 
         Events.send('bunny_died');
-
-        var shape:echo.shape.Circle = cast body.shape;
-
-        var count = Math.floor(shape.radius / 1.5);
 
         // COREY MAKE AN EFFECT HERE
     }

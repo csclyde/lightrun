@@ -127,16 +127,16 @@ class Level extends Entity {
             makeRandomEnvObj();
         }
     }
-    function makeRandomEnvObj(){
-        var shapeInfo: ShapeInfo;
+
+    function makeRandomEnvObj() {
+        var shapeInfo:ShapeInfo;
         var roll = Math.random();
         if(roll < 0.33)
-            shapeInfo = ShapeInfo.NGon(4, Util.randRange(10, 50), Util.randRange(0,360));
-        else if (roll < 0.66)
+            shapeInfo = ShapeInfo.NGon(4, Util.randRange(10, 50), Util.randRange(0, 360));
+        else if(roll < 0.66)
             shapeInfo = ShapeInfo.Circle(Util.randRange(10, 50));
-        else
-            shapeInfo = ShapeInfo.NGon(Util.randRange(3,12), Util.randRange(10, 50), Util.randRange(0,360));
-                
+        else shapeInfo = ShapeInfo.NGon(Util.randRange(3, 12), Util.randRange(10, 50), Util.randRange(0, 360));
+
         var envObj = new EnvObj(Util.randRange(-500, 500), Util.randRange(-500, 500), shapeInfo);
         registerEnvObj(envObj);
     }
@@ -160,20 +160,20 @@ class Level extends Entity {
         });
         var shapeCount = 200;
         for(i in 0...shapeCount) {
-            var shapeInfo = Math.random() < 0.5 ? 
-                ShapeInfo.Square(Util.randRange(10, 100), Util.randRange(10, 100), Util.randRange(0,360)) : 
-                ShapeInfo.Circle(Util.randRange(10, 50));
+            var shapeInfo = Math.random() < 0.5 ? ShapeInfo.Square(Util.randRange(10, 100), Util.randRange(10, 100),
+                Util.randRange(0, 360)) : ShapeInfo.Circle(Util.randRange(10, 50));
             var envObj = new EnvObj(Util.randRange(-500, 500), Util.randRange(-500, 500), shapeInfo);
             registerEnvObj(envObj);
         }
     }
 
-    public function hitEnvBody(body:Body, hit: Vector2, normal: Vector2, playerDir: Vector2) {
+    public function hitEnvBody(body:Body, hit:Vector2, normal:Vector2, playerDir:Vector2) {
         var env = envById[body.id];
         if(env == null)
             return;
         world.getBrighter(env.gotHit());
         world.psystem.makeLightColl(hit, new Vector2(playerDir.x, playerDir.y));
+        world.killBunnies(hit.x, hit.y, 20);
     }
 
     function registerEnvObj(obj:EnvObj) {
@@ -203,24 +203,21 @@ class Level extends Entity {
     public function handlePlayerDeath() {}
 
     public function draw() {
-
-        for(obj in roomEnvObjs)
-            obj.draw();
+        for(obj in roomEnvObjs) obj.draw();
     }
 
     /*
-    public function draw_obj(obj: EnvObj) {
-        switch(obj.shapeInfo) {
-            case ShapeInfo.Square(w,h,r):
-                draw_polygon(obj.sides, obj.getVerts(), 0xFFFFFF, shapeColor);
-            case Circle(r):
-                draw_circle(obj.cx, obj.cy, r, 0xFFFFFF, shapeColor);
-            case NGon(sides, r, rotation):
-                draw_polygon(sides, obj.getVerts(), 0xFFFFFF, shapeColor);
+        public function draw_obj(obj: EnvObj) {
+            switch(obj.shapeInfo) {
+                case ShapeInfo.Square(w,h,r):
+                    draw_polygon(obj.sides, obj.getVerts(), 0xFFFFFF, shapeColor);
+                case Circle(r):
+                    draw_circle(obj.cx, obj.cy, r, 0xFFFFFF, shapeColor);
+                case NGon(sides, r, rotation):
+                    draw_polygon(sides, obj.getVerts(), 0xFFFFFF, shapeColor);
+            }
         }
-    }
-    */
-
+     */
     public function draw_line(from_x:Float, from_y:Float, to_x:Float, to_y:Float, color:Int, alpha:Float = 1.) {
         graphics.lineStyle(1, color, alpha);
         graphics.moveTo(from_x, from_y);
@@ -231,24 +228,23 @@ class Level extends Entity {
         stroke != null ? graphics.lineStyle(1, stroke, 1) : graphics.lineStyle();
         graphics.drawRect(min_x, min_y, width, height);
     }
-
     /*
-    public function draw_circle(x:Float, y:Float, radius:Float, color:Int, fillColor: Int, ?stroke:Int,  alpha:Float = 1.) {
-        graphics.lineStyle(1, stroke, 1);
-        graphics.beginFill(fillColor);
-        graphics.drawCircle(x, y, radius);
-        graphics.endFill();
-    }
+        public function draw_circle(x:Float, y:Float, radius:Float, color:Int, fillColor: Int, ?stroke:Int,  alpha:Float = 1.) {
+            graphics.lineStyle(1, stroke, 1);
+            graphics.beginFill(fillColor);
+            graphics.drawCircle(x, y, radius);
+            graphics.endFill();
+        }
 
-    public function draw_polygon(count:Int, vertices:Array<Vector2>, color:Int, fillColor: Int, ?stroke:Int, alpha:Float = 1) {
-        if(count < 2)
-            return;
-        stroke != null ? graphics.lineStyle(1, stroke, 1) : graphics.lineStyle();
-        graphics.moveTo(vertices[count - 1].x, vertices[count - 1].y);
-        for(i in 0...count) graphics.lineTo(vertices[i].x, vertices[i].y);
-        graphics.beginFill(fillColor);
-        for(i in 0...count) graphics.addVertex(vertices[i].x, vertices[i].y);
-        graphics.endFill();
-    }
-    */
+        public function draw_polygon(count:Int, vertices:Array<Vector2>, color:Int, fillColor: Int, ?stroke:Int, alpha:Float = 1) {
+            if(count < 2)
+                return;
+            stroke != null ? graphics.lineStyle(1, stroke, 1) : graphics.lineStyle();
+            graphics.moveTo(vertices[count - 1].x, vertices[count - 1].y);
+            for(i in 0...count) graphics.lineTo(vertices[i].x, vertices[i].y);
+            graphics.beginFill(fillColor);
+            for(i in 0...count) graphics.addVertex(vertices[i].x, vertices[i].y);
+            graphics.endFill();
+        }
+     */
 }

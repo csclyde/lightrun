@@ -17,7 +17,7 @@ class World extends Scene {
     public var camera:Camera;
     public var ui:UI;
     public var lighting:Lighting;
-    public var psystem: PSystem;
+    public var psystem:PSystem;
 
     public var currentLevel:Level;
     public var player:en.Player;
@@ -85,9 +85,10 @@ class World extends Scene {
         darkness -= amount;
     }
 
-    public function killBunnies(x:Float, y:Float) {
+    public function killBunnies(x:Float, y:Float, r:Float) {
         for(b in bunnies) {
-            if(b.body.x > x - 10 && b.body.x < x + 10 && b.body.y > y - 10 && b.body.y < y + 10) {
+            var dist = b.body.get_position() - player.body.get_position();
+            if(dist.length < r) {
                 b.die();
                 bunnies.remove(b);
             }
