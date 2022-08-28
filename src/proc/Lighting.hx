@@ -48,7 +48,7 @@ class Lighting extends Process {
         lightmap.blendMode = Multiply;
         lightmap.width = gw();
         lightmap.height = gh();
-        world.hud.add(lightmap, Const.LIGHTING);
+        // world.hud.add(lightmap, Const.LIGHTING);
     }
 
     override function reset() {
