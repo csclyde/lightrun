@@ -9,7 +9,7 @@ class VectorText {
     var cwh:Int;
     var sw:Int;
 
-    var g:h2d.Graphics;
+    public var g:h2d.Graphics;
 
     public function new(parent:h2d.Object, ?size:Int = 16) {
         tx = 0;

@@ -35,8 +35,6 @@ class Label extends Component {
         labelTxt.setScale(2);
 
         vectorTxt = new VectorText(this);
-        vectorTxt.setStyle(16, 1, 0x0000FF);
-        vectorTxt.drawText(0, 0, l);
 
         // labelTxt.dropShadow = {
         // 	dx: 0,
@@ -44,12 +42,16 @@ class Label extends Component {
         // 	color: 0xFF0000,
         // 	alpha: 1.0
         // };
+
+        Events.subscribe('refresh_hud', (p) -> reset());
     }
 
     override function reset() {
-        labelTxt.dropShadow.dx = 0;
-        labelTxt.dropShadow.dy = 0;
         setColor(1.0, 1.0, 1.0);
+
+        vectorTxt.g.clear();
+        vectorTxt.setStyle(16, 1, 0x0000FF);
+        vectorTxt.drawText(0, 0, text);
     }
 
     public function setColor(r, g, b) {

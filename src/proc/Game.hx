@@ -60,7 +60,7 @@ class Game extends Process {
         fade = new h2d.Bitmap(h2d.Tile.fromColor(0x070707));
         fade.width = w();
         fade.height = h();
-        // root.add(fade, Const.SCREEN_LAYER);
+        root.add(fade, Const.SCREEN_LAYER);
 
         feedbackDisplay.setTextScale(1);
         root.add(feedback, Const.UI_LAYER);
@@ -107,6 +107,7 @@ class Game extends Process {
 
         fade.width = w();
         fade.height = h();
+        fade.alpha = 0;
 
         world.resizeAll();
         setCursor();

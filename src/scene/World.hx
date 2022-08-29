@@ -1,5 +1,6 @@
 package scene;
 
+import eng.hxbt.decorators.Include;
 import eng.tool.VectorText;
 import h3d.shader.pbr.Light.LightEvaluation;
 import h2d.SpriteBatch;
@@ -37,6 +38,8 @@ class World extends Scene {
 
     public var spawnRate:Float;
     public var spawnTimer:Float;
+
+    public var deathTimer:Float;
 
     public function new(p:Process) {
         super(p);
@@ -76,8 +79,9 @@ class World extends Scene {
         worldGraphics = new h2d.Graphics(scene);
         vt = new VectorText(hud, 8);
 
-        spawnRate = 0.5;
+        spawnRate = 0.1;
         spawnTimer = 0.0;
+        deathTimer = 0.0;
     }
 
     public function getBrighter(amount:Float) {}
@@ -176,10 +180,27 @@ class World extends Scene {
 
         spawnTimer += dt;
 
+        if(player.lightness <= 0) {
+            deathTimer += dt;
+        }else {
+            deathTimer = 0.0;
+        }
+
+        if(deathTimer > 0) {
+            game.fade.alpha = deathTimer / 5;
+        }else {
+            game.fade.alpha = 0.0;
+        }
+
         if(spawnTimer > spawnRate) {
             spawnTimer -= spawnRate;
             var db = new DustBunny(player.cx + Util.randRange(-200, 200), player.cy + Util.randRange(-200, 200));
             bunnies.push(db);
+        }
+
+        if(deathTimer > 5) {
+            trace('DIED HAHA');
+            game.switchScene(game.menuScene, () -> {}, -1);
         }
     }
 
