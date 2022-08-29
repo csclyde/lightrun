@@ -79,7 +79,7 @@ class World extends Scene {
         worldGraphics = new h2d.Graphics(scene);
         vt = new VectorText(hud, 8);
 
-        spawnRate = 0.1;
+        spawnRate = 0.15;
         spawnTimer = 0.0;
         deathTimer = 0.0;
     }
@@ -187,7 +187,7 @@ class World extends Scene {
         }
 
         if(deathTimer > 0) {
-            game.fade.alpha = deathTimer / 5;
+            game.fade.alpha = deathTimer / 1;
         }else {
             game.fade.alpha = 0.0;
         }
@@ -198,7 +198,7 @@ class World extends Scene {
             bunnies.push(db);
         }
 
-        if(deathTimer > 5) {
+        if(deathTimer > 1) {
             trace('DIED HAHA');
             game.switchScene(game.menuScene, () -> {}, -1);
         }
