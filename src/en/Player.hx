@@ -106,7 +106,7 @@ class Player extends Entity {
         lightness = Util.clamp(lightness, 0, 100);
 
         if(lightCharge > 0) {
-            Const.scaleMod = 1 / (1 + lightCharge);
+            Const.scaleMod = 1 / (1 + (lightCharge * 3));
         }else {
             Const.scaleMod += dt;
             Const.scaleMod = Math.min(1.0, Const.scaleMod);
@@ -133,7 +133,7 @@ class Player extends Entity {
     function lameControl() {
         var accelX = 0.0;
         var accelY = 0.0;
-        var accel = 100;
+        var accel = 200;
 
         // apply the controls to players acceleration
         if(input.isControlActive('up')) {

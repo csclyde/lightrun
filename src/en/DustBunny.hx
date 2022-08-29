@@ -16,11 +16,11 @@ class DustBunny extends Entity {
             x: sx,
             y: sy,
             material: {
-                elasticity: 0.5
+                elasticity: 1.0
             },
-            mass: .0001,
+            mass: 0.2,
             // drag_length: 1,
-            max_velocity_length: 200,
+            max_velocity_length: 150,
             shapes: [
                 {
                     type: CIRCLE,
