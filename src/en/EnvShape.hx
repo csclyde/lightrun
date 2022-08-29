@@ -121,7 +121,7 @@ class EnvObj extends Entity {
     }
 
     function draw_circle(x:Float, y:Float, radius:Float) {
-        increase_canvas_size();
+        //increase_canvas_size();
         graphics.lineStyle(1, shapeColor, 1);
         graphics.beginFill(fillColor.toColor(), fillColor.w);
         graphics.drawCircle(x, y, radius);
@@ -132,7 +132,7 @@ class EnvObj extends Entity {
         if(count < 2)
             return;
         
-        increase_canvas_size();
+        //increase_canvas_size();
         graphics.lineStyle(1, shapeColor, 1);
         graphics.moveTo(vertices[count - 1].x, vertices[count - 1].y);
         for(i in 0...count) graphics.lineTo(vertices[i].x, vertices[i].y);
