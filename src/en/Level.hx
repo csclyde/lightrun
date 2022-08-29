@@ -27,10 +27,15 @@ class Level extends Entity {
 
     var triggers:Array<Trigger>;
 
-    var seed:Int = 500;
     var gridSquareSize:Int = 1000;
     var activeGridSquares:Array<Vector2>;
     var gridSquareObjects:Map<String, Array<EnvObj>>;
+
+    // shape generation variables
+    var seed:Int = 500;
+    var frequencyOfShapes:Float = 0.1;
+    var pixelsPerSample:Int = 50;
+    var perlinSize:Float = 50;
 
     var perlin:Perlin;
 
@@ -321,9 +326,7 @@ class Level extends Entity {
     }
 
     function activateGridSquare(square: Vector2) {
-      //trace('activate: ${square}');
       activeGridSquares.push(square);
-      //trace('active: ${activeGridSquares}');
 
       var x: Int = 0;
       var y: Int = 0;
@@ -334,29 +337,43 @@ class Level extends Entity {
 
       var objects: Array<EnvObj> = [];
 
-      var granularity: Int = 50;
-      for (i in Math.round(square.x * gridSquareSize / granularity)...Math.round((square.x * gridSquareSize + gridSquareSize) / granularity)) {
-        x = i * granularity;
-        for (j in Std.int(square.y * gridSquareSize / granularity)...Math.round((square.y * gridSquareSize + gridSquareSize) / granularity)) {
-          y = j * granularity;
+      for (
+          i in Math.round(
+              square.x * gridSquareSize / pixelsPerSample
+          )...Math.round(
+              (square.x * gridSquareSize + gridSquareSize) / pixelsPerSample
+          )
+      ) {
+        x = i * pixelsPerSample;
+
+        for (
+            j in Std.int(
+              square.y * gridSquareSize / pixelsPerSample
+            )...Math.round(
+              (square.y * gridSquareSize + gridSquareSize) / pixelsPerSample
+            )
+        ) {
+          y = j * pixelsPerSample;
+
           count++;
 
           value = perlin.OctavePerlin(
-              x/50, // x
-              y/50, // y
+              x/perlinSize, // x
+              y/perlinSize, // y
               1, // z
               1, // octaves
               0.5, // persistence
               0.25 // frequency
           );
 
+          // perlin noise visualization stuff
           //var color = new Vector(value, value, value, 1).toColor();
 
           //graphics.beginFill(color, 1);
-          //graphics.drawRect(x - granularity / 2, y - granularity / 2, granularity, granularity);
+          //graphics.drawRect(x - pixelsPerSample / 2, y - pixelsPerSample / 2, pixelsPerSample, pixelsPerSample);
           //graphics.endFill();
 
-          if (rand.rand() * value < 0.1) {
+          if (rand.rand() * value < frequencyOfShapes) {
               var object = new EnvObj(x, y, randomShape(rand));
               objects.push(object);
               registerEnvObj(object);
