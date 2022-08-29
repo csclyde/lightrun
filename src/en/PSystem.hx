@@ -44,7 +44,7 @@ class LightCollisionFX{
     var minSpeed = 70;
     var maxSpeed = 120;
     var maxAngle = 50;
-    var colors = [0xFF0202, 0x0213FF,0xB3FF00,0x03FF39];
+    var colors = [0xFF0202,0xB3FF00];
     var curFrame: Float = 0;
     var beams: Array<LightParticle>;
     var white = new Vector(1,1,1);

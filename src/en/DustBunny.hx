@@ -1,5 +1,7 @@
 package en;
 
+import h3d.Vector;
+import echo.util.ext.IntExt.max;
 import echo.World;
 import hxd.fmt.grd.Data.ColorStop;
 import echo.data.Options.LinecastOptions;
@@ -76,7 +78,7 @@ class DustBunny extends Entity {
 
         Events.send('bunny_died');
 
-        // COREY MAKE AN EFFECT HERE
+        new DeadBunny(world, new Vector2(body.x, body.y), 3, 0x7C3D8A);
     }
 
     public override function preUpdate() {}
@@ -111,33 +113,115 @@ class DustBunny extends Entity {
 class DeadBunny extends Entity{
     var graphics:h2d.Graphics;
     var time: Float = 0;
+    var maxMoteLife =  10;
     var heartGrow: Float = 0.5;
     var isGrowingHeart = true; 
     var edgeExplodeStart = 0.3;
     var didExplodeEdge = false;
-    function new(s: Scene, pos: Vector2, radius: Float, edgeColor: Int){
+    var edgeColor: Int;
+    var numBunnies = 12;
+    var maxMoteSpeed = 5;
+    var motes: Array<BunnyMote> = [];
+    var implodes: Array<MoteImplode> = [];
+    public function new(s: Scene, pos: Vector2, radius: Float, _edgeColor: Int){
         super(s, pos.x, pos.y);
+        edgeColor = _edgeColor;
+        graphics = new h2d.Graphics(world.scene);
+        graphics.x = pos.x;
+        graphics.y = pos.y;
+        for(i in 0...10){
+            var vel = new Vector2(Util.frandRange(-5,5), Util.frandRange(-5,5));
+            implodes.push(new MoteImplode( vel,0xffff00, heartGrow, -vel));
+        }
     }
     public override function update(){
-        time += App.inst.game.worldScene.dt;
+        var delta = App.inst.game.worldScene.dt;
+        time += delta;
         graphics.clear();
         if(isGrowingHeart){
             if(time >= heartGrow)
                 isGrowingHeart = false;
             drawHeart();
+            drawImplode(delta);
         }
         if(!didExplodeEdge){
-
+            drawMotes(delta);
         }else{
-
+            drawEdge();
+            if(time >= edgeExplodeStart){
+                didExplodeEdge = true;
+                motes = [for(i in 0...numBunnies) new BunnyMote(
+                    new Vector2(0,0),
+                    new Vector2(Util.frandRange(-maxMoteSpeed, maxMoteSpeed), Util.frandRange(-maxMoteSpeed, maxMoteSpeed)),
+                    Util.frandRange(5, maxMoteLife)
+                )];
+            }
+        }
+        if(time > 20)
+            destroy();
+    }
+    function drawImplode(delta: Float){
+        var white = new Vector(1,1,1);
+        for(p in implodes){
+            p.life -= delta;
+            var lifeRatio = 1 - (p.life / p.maxLife);
+            p.head = PSystem.easeInLerp(p.startPos, p.endPos, lifeRatio);
+            p.tail = PSystem.easeOutLerp(p.startPos, p.endPos, lifeRatio);
+            p.curColor.lerp(white, p.baseColor, lifeRatio);
+            graphics.lineStyle(1, p.curColor.toColor(), 1);
+            graphics.moveTo(p.head.x, p.head.y);
+            graphics.lineTo(p.tail.x, p.tail.y);
         }
     }
     function drawEdge(){
-
+        graphics.lineStyle(1, edgeColor, 1 - (time / edgeExplodeStart));
+        graphics.drawCircle(0,0, 3);
     }
     function drawHeart(){
         graphics.beginFill(0x880000);
         graphics.drawCircle(0,0, (time / heartGrow) * 3);
         graphics.endFill();
+    }
+    function drawMotes(delta: Float){
+        for(mote in motes){
+            mote.life -= delta;
+            mote.position += mote.velocity * delta;
+            graphics.drawCircle(mote.position.x, mote.position.y, 1.5);
+        }
+    }
+}
+class BunnyMote{
+    public var position: Vector2;
+    public var velocity: Vector2;
+    public var maxLife: Float;
+    public var life: Float;
+    public function new (_pos: Vector2, _vel: Vector2, _life: Float){
+        position = _pos; 
+        velocity = _vel; 
+        maxLife = _life;
+        life = _life;
+    }
+}
+class MoteImplode{
+    public var baseColor: Vector; 
+    public var curColor: Vector;
+    public var life: Float;
+    public var maxLife: Float;
+    public var isDead = false;
+    public var startPos: Vector;
+    public var endPos: Vector;
+    public var head: Vector; 
+    public var tail: Vector;
+
+    public function new(_pos: Vector2, _col: Int, _life: Float, _velocity: Vector2){
+        baseColor = Vector.fromColor(_col); 
+        life = _life;
+        maxLife = _life;
+        curColor = new Vector(1,1,1);
+        startPos = new Vector(_pos.x, _pos.y);
+        var endTemp = _velocity * _life + _pos;
+        endPos = new Vector(endTemp.x, endTemp.y);
+        head = new Vector(_pos.x, _pos.y);
+        tail = new Vector(_pos.x, _pos.y);
     }
 }
