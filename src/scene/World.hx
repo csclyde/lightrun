@@ -199,8 +199,8 @@ class World extends Scene {
         }
 
         if(deathTimer > 1) {
-            trace('DIED HAHA');
-            game.switchScene(game.menuScene, () -> {}, -1);
+            game.fade.alpha = 0.0;
+            game.switchScene(new Fail(game), () -> {}, -1);
         }
     }
 

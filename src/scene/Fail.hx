@@ -4,9 +4,9 @@ import eng.tool.VectorText;
 import ui.comp.LabelButton;
 import sys.FileSystem;
 
-class MainMenu extends Scene {
+class Fail extends Scene {
     public var uiRoot:h2d.Flow;
-    public var menuItems:Array<ui.comp.LabelButton>;
+    public var menuItems:Array<ui.comp.Component>;
 
     var continueGameItem:LabelButton;
     var newGameItem:LabelButton;
@@ -25,10 +25,12 @@ class MainMenu extends Scene {
         uiRoot.layout = Vertical;
 
         logo = new VectorText(uiRoot, 16);
-        logo.setStyle(24, 1, 0xFF00FF);
-        logo.drawText(0, 0, "LIGHTRUN");
+        logo.setStyle(16, 1, 0xFF0000);
+        logo.drawText(0, 0, "YOU UTTERLY FAILED");
 
-        newGameItem = new ui.comp.LabelButton(uiRoot, 'PLAY GAME');
+        game.fade.alpha = 0;
+
+        newGameItem = new ui.comp.LabelButton(uiRoot, 'TRY AGAIN');
         menuItems.push(newGameItem);
         newGameItem.onClick = function() {
             game.saver.loadGame('slot1');
@@ -59,14 +61,7 @@ class MainMenu extends Scene {
         Events.send('exit_game');
     }
 
-    override public function switchTo() {
-        // logo.g.clear();
-        // logo.setStyle(24, 1, 0xFF00FF);
-        // logo.drawText(0, 0, "LIGHTRUN");
-        for(i in menuItems) {
-            i.reset();
-        }
-    }
+    override public function switchTo() {}
 
     override public function switchFrom() {
         for(item in menuItems) {
