@@ -5,6 +5,9 @@ import en.EnvShape.ShapeInfo;
 import hxd.fmt.fbx.BaseLibrary.TmpObject;
 import en.EnvShape.EnvObj;
 import h2d.TileGroup;
+import Perlin;
+import h3d.Vector;
+import hxd.Rand;
 
 class Level extends Entity {
     public var mapWidth:Int;
@@ -24,6 +27,18 @@ class Level extends Entity {
 
     var triggers:Array<Trigger>;
 
+    var gridSquareSize:Int = 1000;
+    var activeGridSquares:Array<Vector2>;
+    var gridSquareObjects:Map<String, Array<EnvObj>>;
+
+    // shape generation variables
+    var seed:Int = 500;
+    var frequencyOfShapes:Float = 0.1;
+    var pixelsPerSample:Int = 50;
+    var perlinSize:Float = 50;
+
+    var perlin:Perlin;
+
     public function new(w:Int, h:Int, ?tw:Int = 16, ?th:Int = 16) {
         super(world, 0, 0);
 
@@ -39,6 +54,9 @@ class Level extends Entity {
         tileHeight = th;
         offsetX = -(mapWidth / 2) * tileWidth;
         offsetY = -(mapHeight / 2) * tileHeight;
+
+        perlin = new Perlin();
+        gridSquareObjects = new Map();
 
         triggers = [];
         graphics = new h2d.Graphics(world.scene);
@@ -104,6 +122,7 @@ class Level extends Entity {
     }
 
     public function build() {
+        activeGridSquares = [];
         createTiles();
         createCollision();
         createTriggers();
@@ -119,13 +138,13 @@ class Level extends Entity {
         // addHexagon(210, 140);
         // addHexagon(0, 280);
 
-        var shapeCount = 50;
-        for(i in 0...shapeCount) {
-            // var envShape = Math.random() < 0.5 ? EnvShape.Square(Util.randRange(10, 100), Util.randRange(10, 100)) : EnvShape.Circle(Util.randRange(10, 50));
-            // var env = new EnvObj(Util.randRange(-500, 500), Util.randRange(-500, 500), envShape);
-            // roomCollision.push(env.body);
-            makeRandomEnvObj();
-        }
+        //var shapeCount = 50;
+        //for(i in 0...shapeCount) {
+        //    // var envShape = Math.random() < 0.5 ? EnvShape.Square(Util.randRange(10, 100), Util.randRange(10, 100)) : EnvShape.Circle(Util.randRange(10, 50));
+        //    // var env = new EnvObj(Util.randRange(-500, 500), Util.randRange(-500, 500), envShape);
+        //    // roomCollision.push(env.body);
+        //    makeRandomEnvObj();
+        //}
     }
 
     function makeRandomEnvObj() {
@@ -191,6 +210,7 @@ class Level extends Entity {
 
     override function update() {
         draw();
+        updateActiveGridSquares();
     }
 
     function createTriggers() {}
@@ -205,6 +225,21 @@ class Level extends Entity {
 
     public function draw() {
         for(obj in roomEnvObjs) obj.draw();
+
+        for(obj in roomEnvObjs)
+            obj.draw();
+
+        //graphics.clear();
+        //for (gridSquare in activeGridSquares) {
+        //    draw_rect(
+        //        gridSquare.x * gridSquareSize,
+        //        gridSquare.y * gridSquareSize,
+        //        gridSquareSize,
+        //        gridSquareSize,
+        //        0xFF00FF,
+        //        0xFF00FF
+        //    );
+        //}
     }
 
     /*
@@ -237,15 +272,145 @@ class Level extends Entity {
             graphics.endFill();
         }
 
-        public function draw_polygon(count:Int, vertices:Array<Vector2>, color:Int, fillColor: Int, ?stroke:Int, alpha:Float = 1) {
-            if(count < 2)
-                return;
-            stroke != null ? graphics.lineStyle(1, stroke, 1) : graphics.lineStyle();
-            graphics.moveTo(vertices[count - 1].x, vertices[count - 1].y);
-            for(i in 0...count) graphics.lineTo(vertices[i].x, vertices[i].y);
-            graphics.beginFill(fillColor);
-            for(i in 0...count) graphics.addVertex(vertices[i].x, vertices[i].y);
-            graphics.endFill();
+    public function draw_polygon(count:Int, vertices:Array<Vector2>, color:Int, fillColor: Int, ?stroke:Int, alpha:Float = 1) {
+        if(count < 2)
+            return;
+        stroke != null ? graphics.lineStyle(1, stroke, 1) : graphics.lineStyle();
+        graphics.moveTo(vertices[count - 1].x, vertices[count - 1].y);
+        for(i in 0...count) graphics.lineTo(vertices[i].x, vertices[i].y);
+        graphics.beginFill(fillColor);
+        for(i in 0...count) graphics.addVertex(vertices[i].x, vertices[i].y);
+        graphics.endFill();
+    }
+    */
+    function updateActiveGridSquares() {
+      var relevant = getRelevantGridSquares();
+      var squaresToDeactivate = activeGridSquares.filter(
+          v1 -> relevant.filter(v2 -> v1 == v2).length == 0
+      );
+
+      var squaresToActivate = relevant.filter(
+          v1 -> activeGridSquares.filter(v2 -> v1 == v2).length == 0
+      );
+
+      //trace('relevante: ${relevant}');
+      //trace('active: ${activeGridSquares}');
+      //trace('squaresToDeactivate: ${squaresToDeactivate}');
+      //trace('squaresToActivate: ${squaresToActivate}');
+
+      for (square in squaresToDeactivate) {
+        deactivateGridSquare(square);
+      }
+
+      for (square in squaresToActivate) {
+        activateGridSquare(square);
+      }
+    }
+
+    function getRelevantGridSquares() {
+      var playerBod = world.player.body;
+
+      var top = Math.round((playerBod.y + gridSquareSize * 0.25) / gridSquareSize);
+      var right = Math.round((playerBod.x + gridSquareSize * 0.25) / gridSquareSize);
+      var bottom = Math.round((playerBod.y - gridSquareSize * 0.75) / gridSquareSize);
+      var left = Math.round((playerBod.x - gridSquareSize * 0.75) / gridSquareSize);
+
+      //trace('top: ${top} right: ${right} bottom: ${bottom} left: ${left}');
+
+      return [
+        new Vector2(left, top),
+        new Vector2(right, top),
+        new Vector2(left, bottom),
+        new Vector2(right, bottom)
+      ];
+    }
+
+    function activateGridSquare(square: Vector2) {
+      activeGridSquares.push(square);
+
+      var x: Int = 0;
+      var y: Int = 0;
+      var value: Float = 0;
+      var count: Int = 0;
+
+      var rand = new Rand(seed);
+
+      var objects: Array<EnvObj> = [];
+
+      for (
+          i in Math.round(
+              square.x * gridSquareSize / pixelsPerSample
+          )...Math.round(
+              (square.x * gridSquareSize + gridSquareSize) / pixelsPerSample
+          )
+      ) {
+        x = i * pixelsPerSample;
+
+        for (
+            j in Std.int(
+              square.y * gridSquareSize / pixelsPerSample
+            )...Math.round(
+              (square.y * gridSquareSize + gridSquareSize) / pixelsPerSample
+            )
+        ) {
+          y = j * pixelsPerSample;
+
+          count++;
+
+          value = perlin.OctavePerlin(
+              x/perlinSize, // x
+              y/perlinSize, // y
+              1, // z
+              1, // octaves
+              0.5, // persistence
+              0.25 // frequency
+          );
+
+          // perlin noise visualization stuff
+          //var color = new Vector(value, value, value, 1).toColor();
+
+          //graphics.beginFill(color, 1);
+          //graphics.drawRect(x - pixelsPerSample / 2, y - pixelsPerSample / 2, pixelsPerSample, pixelsPerSample);
+          //graphics.endFill();
+
+          if (rand.rand() * value < frequencyOfShapes) {
+              var object = new EnvObj(x, y, randomShape(rand));
+              objects.push(object);
+              registerEnvObj(object);
+          }
         }
-     */
+      }
+
+      gridSquareObjects.set(keyForVec(square), objects);
+    }
+
+    function keyForVec(vec: Vector2) {
+      return '${vec.x}:${vec.y}';
+    }
+
+    function randRange(rand: Rand, low: Int, high: Int) {
+      var value = rand.rand();
+      return value * (high - low) + low;
+    }
+
+    function randomShape(rand: Rand) {
+      var value = rand.rand();
+      if (value <= 0.33) {
+        return ShapeInfo.Circle(randRange(rand, 10, 50));
+      } else if (value >= 0.66) {
+        // square
+        return ShapeInfo.NGon(4, randRange(rand, 10, 50), randRange(rand, 0, 360));
+      } else {
+        return ShapeInfo.NGon(Math.round(randRange(rand, 3, 12)), randRange(rand, 10, 50), randRange(rand, 0, 360));
+      }
+    }
+
+    function deactivateGridSquare(square: Vector2) {
+      var objects = gridSquareObjects.get(keyForVec(square));
+      gridSquareObjects.remove(keyForVec(square));
+      for (object in objects) {
+        unRegisterEnvObj(object);
+      }
+      activeGridSquares.remove(square);
+    }
 }
