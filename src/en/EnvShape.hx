@@ -1,5 +1,9 @@
 package en;
 
+import hxsl.RuntimeShader;
+import format.swf.Data.Font2GlyphData;
+import openal.EFX.Filter;
+import h2d.filter.Glow;
 import h2d.filter.Bloom;
 import format.abc.Data.MethodTypeExtra;
 import h3d.Vector;
@@ -21,11 +25,13 @@ class EnvObj extends Entity {
     public var rotation: Float;
     public var sides: Int;
     public var radius: Float;
+    var isActive = false;
     var decay: Float = 0.75;
     var nextBright: Float = 1;
     var fadeRate: Float = 2;
     var fillColor: Vector;
     var graphics:h2d.Graphics;
+    var fxFilter: h2d.filter.Filter;
 
     public function new(sx:Float, sy:Float, shape:ShapeInfo, color:Int = 0xFFFFFFFF) {
         super(world, sx, sy);
@@ -68,8 +74,6 @@ class EnvObj extends Entity {
             mass: STATIC,
         });
         world.physWorld.add(body);
-        //var shader = new Bloom(5,5,5,5);
-        //graphics.addShader(shader);
     }
     public override function update(){
         if(extraBrightness > 0){
@@ -96,7 +100,21 @@ class EnvObj extends Entity {
                 draw_polygon(sides, getVerts());
         }
     }
+    function increase_canvas_size(){
+        var lowerLeft = new Vector2(body.x - radius * 2, body.y - radius * 2);
+        var upperLeft = new Vector2(body.x - radius * 2, body.y + radius * 2);
+        var lowerRight = new Vector2(body.x + radius * 2, body.y - radius * 2);
+        var upperRight = new Vector2(body.x + radius * 2, body.y + radius * 2);
+        
+        graphics.lineStyle(1, 0x000000, 0);
+        graphics.moveTo(lowerLeft.x, lowerLeft.y);
+        graphics.lineTo(upperLeft.x, upperLeft.y);
+        graphics.lineTo(upperRight.x, upperRight.y);
+        graphics.lineTo(lowerRight.x, lowerRight.y);
+        graphics.lineTo(lowerLeft.x, lowerLeft.y);
+    }
     function draw_circle(x:Float, y:Float, radius:Float) {
+        increase_canvas_size();
         graphics.lineStyle(1, shapeColor, 1);
         graphics.beginFill(fillColor.toColor(), fillColor.w);
         graphics.drawCircle(x, y, radius);
@@ -106,6 +124,8 @@ class EnvObj extends Entity {
     function draw_polygon(count:Int, vertices:Array<Vector2>) {
         if(count < 2)
             return;
+        
+        increase_canvas_size();
         graphics.lineStyle(1, shapeColor, 1);
         graphics.moveTo(vertices[count - 1].x, vertices[count - 1].y);
         for(i in 0...count) graphics.lineTo(vertices[i].x, vertices[i].y);
@@ -118,7 +138,15 @@ class EnvObj extends Entity {
         baseBrightness += nextBright;
         extraBrightness += value * 3;
         nextBright *= decay; 
-        trace(value);
+        if(!isActive){
+            isActive = true;
+            var col = Vector.fromColor(shapeColor);
+            col.add(new Vector(1,1,1)).scale(0.5);
+            var lightGlow = new shader.LightGlow(); 
+            lightGlow.glowColor = new Vector(1,0,0);
+            lightGlow.globalPos = new Vector(body.x, body.y);
+            graphics.filter =  new h2d.filter.Shader(lightGlow);
+        }
         return value;
     }
 }
