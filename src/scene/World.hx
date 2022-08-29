@@ -79,7 +79,7 @@ class World extends Scene {
         worldGraphics = new h2d.Graphics(scene);
         vt = new VectorText(hud, 8);
 
-        spawnRate = 0.5;
+        spawnRate = 0.1;
         spawnTimer = 0.0;
         deathTimer = 0.0;
     }

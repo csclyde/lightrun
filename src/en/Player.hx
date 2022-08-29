@@ -116,7 +116,7 @@ class Player extends Entity {
 
     public function gainCharge() {
         // gain a second of charge
-        var gain = Math.min(timeout.getS('lightmode') + 0.2, 3.0);
+        var gain = Math.min(timeout.getS('lightmode') + 0.2, 1.0);
         timeout.set('lightmode', gain);
 
         lightness += 1;
@@ -168,7 +168,7 @@ class Player extends Entity {
             var points = calculateLightbeam(playerPos, dir, lightCharge * lazerSpeed, 0, [playerPos], false);
             drawLightPreview(points);
         }else if(lightCharge > 0) {
-            timeout.set('lightmode', Math.min(lightCharge, 3.0));
+            timeout.set('lightmode', Math.min(lightCharge, 1.0));
             lightCharge = 0;
             enterLightMode();
         }
