@@ -10,13 +10,15 @@ class Player extends Entity {
     var lightGraphics:h2d.Graphics;
     var lazerSpeed = 700;
     var chargeSpeed = .4;
-    var isLight = false;
+
+    public var isLight = false;
+
     var lastCollided:Body = null;
     var lazerPoints:Array<PointInTime> = [];
     var lazerTTL = 0.3;
     var lazerDir:Vector2;
 
-    var darkness:Float;
+    public var lightness:Float;
 
     public function new(sx, sy) {
         super(world, sx, sy);
@@ -42,9 +44,9 @@ class Player extends Entity {
         lightGraphics = new h2d.Graphics(world.scene);
         lightCharge = 0.0;
         world.physWorld.add(body);
-        enterLameMode();
+        enterLameMode(new Vector2(0, 0));
 
-        darkness = 0.0;
+        lightness = 100.0;
     }
 
     override function reset() {
@@ -100,13 +102,32 @@ class Player extends Entity {
         }
         if(lazerPoints.length > 1)
             drawLightbeam(lazerPoints.map(lp -> lp.point));
+
+        lightness = Util.clamp(lightness, 0, 100);
+
+        if(lightCharge > 0) {
+            Const.scaleMod = 1 / (1 + lightCharge);
+        }else {
+            Const.scaleMod += dt;
+            Const.scaleMod = Math.min(1.0, Const.scaleMod);
+        }
+        game.resizeAll();
     }
 
-    function enterLameMode() {
+    public function gainCharge() {
+        // gain a second of charge
+        var gain = Math.min(timeout.getS('lightmode') + 0.2, 3.0);
+        timeout.set('lightmode', gain);
+
+        lightness += 1;
+    }
+
+    function enterLameMode(vel:Vector2) {
         isLight = false;
         body.active = true;
         body.mass = 1.0;
         lightGraphics.clear();
+        body.velocity.set(vel.x, vel.y);
     }
 
     function lameControl() {
@@ -157,6 +178,8 @@ class Player extends Entity {
         isLight = true;
         body.active = false;
         body.mass = 0;
+        body.velocity.set(0, 0);
+        body.acceleration.set(0, 0);
         graphics.clear();
         lastCollided = null;
         lazerPoints = [{point: new Vector2(cx, cy), time: et}];
@@ -165,17 +188,22 @@ class Player extends Entity {
     }
 
     function lightControl() {
-        if(timeout.getS("lightmode") == 0)
-            enterLameMode();
         var playerPos = new Vector2(cx, cy);
         var points = calculateLightbeam(playerPos, lazerDir, dt * lazerSpeed, 0, [playerPos], true);
         var lastPoint = points[points.length - 1];
+
+        if(timeout.getS("lightmode") == 0) {
+            var exitVel = lastPoint - body.get_position();
+            exitVel = exitVel.normal * 50;
+            enterLameMode(exitVel);
+        }
+
         lazerPoints.push({point: lastPoint, time: et});
         body.x = lastPoint.x;
         body.y = lastPoint.y;
 
         // kill enemies at this point
-        world.killBunnies(body.x, body.y);
+        world.killBunnies(body.x, body.y, 5);
     }
 
     function drawLightPreview(points:Array<Vector2>) {

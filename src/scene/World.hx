@@ -17,7 +17,7 @@ class World extends Scene {
     public var camera:Camera;
     public var ui:UI;
     public var lighting:Lighting;
-    public var psystem: PSystem;
+    public var psystem:PSystem;
 
     public var currentLevel:Level;
     public var player:en.Player;
@@ -76,18 +76,16 @@ class World extends Scene {
         worldGraphics = new h2d.Graphics(scene);
         vt = new VectorText(hud, 8);
 
-        darkness = 0.0;
         spawnRate = 0.5;
         spawnTimer = 0.0;
     }
 
-    public function getBrighter(amount:Float) {
-        darkness -= amount;
-    }
+    public function getBrighter(amount:Float) {}
 
-    public function killBunnies(x:Float, y:Float) {
+    public function killBunnies(x:Float, y:Float, r:Float) {
         for(b in bunnies) {
-            if(b.body.x > x - 10 && b.body.x < x + 10 && b.body.y > y - 10 && b.body.y < y + 10) {
+            var dist = b.body.get_position() - player.body.get_position();
+            if(dist.length < r) {
                 b.die();
                 bunnies.remove(b);
             }
@@ -97,8 +95,6 @@ class World extends Scene {
     override function init() {
         player = new en.Player(0, 0);
         currentLevel = new Level(0, 0);
-
-        darkness = 0.0;
 
         Events.subscribe('player_died', (params) -> currentLevel.handlePlayerDeath());
 
@@ -173,16 +169,10 @@ class World extends Scene {
     override function update() {
         super.update();
 
-        darkness += dt;
-
-        // darkness = Math.min(darkness, 9.5);
-
-        // game.fade.alpha = darkness / 10;
-
         vt.clear();
 
         vt.setStyle(8, 1, 0xFF0000);
-        vt.drawText(Math.floor(gw() / 2) - 70, 10, "DARKNESS: " + Math.floor(darkness * 10));
+        vt.drawText(Math.floor(gw() / 2) - 70, 10, "LIGHTNESS: " + Math.floor(player.lightness));
 
         spawnTimer += dt;
 

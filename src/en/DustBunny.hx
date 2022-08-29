@@ -1,5 +1,6 @@
 package en;
 
+import echo.World;
 import hxd.fmt.grd.Data.ColorStop;
 import echo.data.Options.LinecastOptions;
 
@@ -15,7 +16,7 @@ class DustBunny extends Entity {
             material: {
                 elasticity: 0.5
             },
-            mass: .5,
+            mass: .0001,
             // drag_length: 1,
             max_velocity_length: 200,
             shapes: [
@@ -68,16 +69,12 @@ class DustBunny extends Entity {
 
         body.mass = 0;
         body.active = false;
-
         dead = true;
+        body.dispose();
 
         g.remove();
 
         Events.send('bunny_died');
-
-        var shape:echo.shape.Circle = cast body.shape;
-
-        var count = Math.floor(shape.radius / 1.5);
 
         // COREY MAKE AN EFFECT HERE
     }
@@ -97,6 +94,10 @@ class DustBunny extends Entity {
         }
 
         if(playerVec.length < 200) {
+            if(playerVec.length < 30 && world.player.isLight == false) {
+                world.player.lightness -= 1.0 * dt;
+            }
+
             playerVec = playerVec.normal * 200;
             body.acceleration = playerVec;
         }else {
@@ -104,5 +105,39 @@ class DustBunny extends Entity {
         }
 
         if(dead) {}
+    }
+}
+
+class DeadBunny extends Entity{
+    var graphics:h2d.Graphics;
+    var time: Float = 0;
+    var heartGrow: Float = 0.5;
+    var isGrowingHeart = true; 
+    var edgeExplodeStart = 0.3;
+    var didExplodeEdge = false;
+    function new(s: Scene, pos: Vector2, radius: Float, edgeColor: Int){
+        super(s, pos.x, pos.y);
+    }
+    public override function update(){
+        time += App.inst.game.worldScene.dt;
+        graphics.clear();
+        if(isGrowingHeart){
+            if(time >= heartGrow)
+                isGrowingHeart = false;
+            drawHeart();
+        }
+        if(!didExplodeEdge){
+
+        }else{
+
+        }
+    }
+    function drawEdge(){
+
+    }
+    function drawHeart(){
+        graphics.beginFill(0x880000);
+        graphics.drawCircle(0,0, (time / heartGrow) * 3);
+        graphics.endFill();
     }
 }
