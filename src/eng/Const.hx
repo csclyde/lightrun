@@ -16,10 +16,12 @@ class Const {
     public static var GAME_H = 270;
 
     /** Viewport scaling **/
-    public static var SCALE(get, never):Int;
+    public static var SCALE(get, never):Float;
+
+    public static var scaleMod:Float = 1.0;
 
     static inline function get_SCALE() {
-        return eng.Util.calcScale(GAME_W, GAME_H);
+        return eng.Util.calcScale(GAME_W, GAME_H) * scaleMod;
     }
 
     /** Game layers indexes **/

@@ -104,6 +104,14 @@ class Player extends Entity {
             drawLightbeam(lazerPoints.map(lp -> lp.point));
 
         lightness = Util.clamp(lightness, 0, 100);
+
+        if(lightCharge > 0) {
+            Const.scaleMod = 1 / (1 + lightCharge);
+        }else {
+            Const.scaleMod += dt;
+            Const.scaleMod = Math.min(1.0, Const.scaleMod);
+        }
+        game.resizeAll();
     }
 
     public function gainCharge() {
